@@ -16,19 +16,15 @@ import static org.junit.Assert.*;
  */
 public class ConexaoTest {
     
-    public ConexaoTest() {
-    }
-
     @Test
-    public void testGetConexao() throws Exception 
+    public void testRetornoConexao() throws Exception 
     {
         Conexao conn = new Conexao();
         
-        assertNotNull(conn.getConexao("http://junit.sourceforge.net/javadoc/org/junit/Assert.html"));
-        assertNotNull(conn.getConexao("http://www.unirio.br/"));
-        assertNull(conn.getConexao("www2.uniriotec.br/ppgi"));  // teste de url sem protocolo indicado (deve retornar nulo)
-        assertNull(conn.getConexao("qualquer coisa"));
-        assertNotNull(conn.getConexao("https://www.google.com/docs/about/")); // teste de conexão com protocolo https
-       
+        assertNotNull(conn.acessarUrl("http://junit.sourceforge.net/javadoc/org/junit/Assert.html"));
+        assertNotNull(conn.acessarUrl("http://www.unirio.br/"));
+        assertNull(conn.acessarUrl("www2.uniriotec.br/ppgi"));  // teste de url sem protocolo indicado (deve retornar nulo)
+        assertNull(conn.acessarUrl("qualquer coisa"));
+        assertNotNull(conn.acessarUrl("https://www.google.com/docs/about/")); // teste de conexão com protocolo https
     }
 }

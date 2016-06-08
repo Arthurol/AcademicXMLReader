@@ -11,7 +11,7 @@ import java.net.URLConnection;
 public class Conexao 
 {
     
-    public URLConnection getConexao(String urlXml) throws MalformedURLException, IOException
+    public URLConnection acessarUrl(String urlXml) throws MalformedURLException, IOException
     {
         try
         {

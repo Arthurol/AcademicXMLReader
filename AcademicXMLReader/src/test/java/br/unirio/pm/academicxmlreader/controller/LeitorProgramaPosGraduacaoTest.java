@@ -5,42 +5,25 @@
  */
 package br.unirio.pm.academicxmlreader.controller;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author Arthur
  */
-public class LeitorProgramaPosGraduacaoTest {
-    
-    public LeitorProgramaPosGraduacaoTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
+public class LeitorProgramaPosGraduacaoTest {  
 
     @Test
-    public void testSomeMethod() {
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
+    public void testProcuraNomePrograma() throws IOException, SAXException, ParserConfigurationException {
+        
+        LeitorProgramaPosGraduacao leitor = new LeitorProgramaPosGraduacao();
+        
+        assertTrue(leitor.procuraProgramaPosGraduacao("https://s3.amazonaws.com/posgraduacao/programas.xml", "PPGI-UNIRIO"));
+        assertFalse(leitor.procuraProgramaPosGraduacao("https://s3.amazonaws.com/posgraduacao/programas.xml", "PPGI"));
+        
+    }    
 }
