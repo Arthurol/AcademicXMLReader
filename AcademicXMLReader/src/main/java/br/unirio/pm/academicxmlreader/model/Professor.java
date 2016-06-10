@@ -11,8 +11,24 @@ public @Getter @Setter class  Professor
     private String codigoCurriculo;
     private String nome;
     private String linhaDePesquisa;
+
+    Professor(String nome, String codigoCurriculo, String linhaDePesquisa)
+    {
+        this.nome = nome;
+        this.codigoCurriculo = codigoCurriculo;
+        this.linhaDePesquisa = linhaDePesquisa;
+    }
     
-    private int artigosRevistaA1, artigosRevistaA2, artigosRevistaB1, artigosRevistaB2, artigosRevistaB3, artigosRevistaB4, artigosRevistaC, artigosRevistaNC;
+    public Professor()
+    {
+        nome = "";
+        codigoCurriculo = "";
+        linhaDePesquisa = "";
+    }
+    
+    
+// Atributos vão ser usados depois ou passados para o curriculo do professor    
+/*    private int artigosRevistaA1, artigosRevistaA2, artigosRevistaB1, artigosRevistaB2, artigosRevistaB3, artigosRevistaB4, artigosRevistaC, artigosRevistaNC;
     private int artigosEventoA1, artigosEventoA2, artigosEventoB1, artigosEventoB2, artigosEventoB3, artigosEventoB4, artigosEventoC, artigosEventoNC;
     
     private int participacoesBancaDoutorado;
@@ -26,4 +42,6 @@ public @Getter @Setter class  Professor
     private int orientacoesDoutoradoEmAndamento;
     private int orientacoesMestradoEmAndamento;
     private int orientacoesGraduacaoEmAndamento;
+*/
+    
 }
