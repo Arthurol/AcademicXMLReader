@@ -17,7 +17,9 @@ import org.w3c.dom.NodeList;
  */
 public class LeitorProfessoresPrograma 
 {
-    
+    /**
+    * Transforma todo o XML em estrutura de árvore e retorna a lista com todas as linhas de pesquisa do programa, cada uma com seus professores
+    */
     public List<LinhaDePesquisa> procuraProfessoresPrograma(String nomeProgramaPosGraduacao) throws IOException, SAXException, ParserConfigurationException
     {
         String urlProfessoresPrograma = "https://s3.amazonaws.com/posgraduacao/" + nomeProgramaPosGraduacao + "/contents.xml";
@@ -31,8 +33,8 @@ public class LeitorProfessoresPrograma
         }
 
         // Transforma toda as tags 'linha' em nós
-        NodeList nosLinha = doc.getElementsByTagName("linha");
-     
+        NodeList nosLinha = doc.getElementsByTagName("linha");  
+        
         if (nosLinha.getLength() == 0)
         {
             System.out.println("Erro: Não existem linhas de pesquisa no XML acessado.");
@@ -58,33 +60,27 @@ public class LeitorProfessoresPrograma
 
                         if (nosProfessor.getLength() > 0)
                         {
-                            for (int j = 0; j < nosProfessor.getLength(); j++)
-                            {
-                                Node nodeProf = nosProfessor.item(j);
-                                
-                                if (nodeProf.getNodeName().equals("professor"))
+                                for (int j = 0; j < nosProfessor.getLength(); j++)
                                 {
-                                //Constroi um objeto professor a cada iteração e o coloca na lista de professores da Linha de pesquisa criada anteriormente
-                                Professor professor = new Professor();
-                                professor.setLinhaDePesquisa(nodeLinhaPesquisa.getAttributes().getNamedItem("nome").getNodeValue());
-                                professor.setCodigoCurriculo(nodeProf.getAttributes().getNamedItem("codigo").getNodeValue());
-                                professor.setNome(nodeProf.getAttributes().getNamedItem("nome").getNodeValue());
-                                
-                                linhaDePesquisa.getProfessores().add(professor);
-                                }  
+                                    Node nodeProf = nosProfessor.item(j);
+
+                                    if (nodeProf.getNodeName().equals("professor"))
+                                    {
+                                        //Constroi um objeto professor a cada iteração e o coloca na lista de professores da Linha de pesquisa criada anteriormente
+                                        Professor professor = new Professor();
+                                        professor.setLinhaDePesquisa(nodeLinhaPesquisa.getAttributes().getNamedItem("nome").getNodeValue());
+                                        professor.setCodigoCurriculo(nodeProf.getAttributes().getNamedItem("codigo").getNodeValue());
+                                        professor.setNome(nodeProf.getAttributes().getNamedItem("nome").getNodeValue());
+
+                                        linhaDePesquisa.getProfessores().add(professor);
+                                    }  
                             }
                             // Após adicionar todos os professores à linha, a mesma é adicionada à lista de Linhas de pesquisa
                             listaLinhasPesquisa.add(linhaDePesquisa);
                         }
-                        else
-                            System.out.println("Atenção: A linha de pesquisa '" + nodeLinhaPesquisa.getAttributes().getNamedItem("nome").getNodeValue() + "' não tem professores.");  
                     }
-                    else
-                        System.out.println("Atenção: Existem linhas de pesquisa sem nome definido"); 
-
-// TIRAR ESSES DOIS 'ELSE' ?          
-
                 }
+                
                 return listaLinhasPesquisa;  
     }
 }

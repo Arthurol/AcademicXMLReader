@@ -1,4 +1,5 @@
 package br.unirio.pm.academicxmlreader.model;
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;

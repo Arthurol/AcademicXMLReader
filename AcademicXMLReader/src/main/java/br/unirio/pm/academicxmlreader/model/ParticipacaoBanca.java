@@ -1,15 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.unirio.pm.academicxmlreader.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
- *
- * @author Arthur
+ * 
+ * Classe que representa uma participação em banca julgadora do professor
  */
-public class ParticipacaoBanca 
+public @Getter @Setter class ParticipacaoBanca 
 {
     
 }
+
+
+

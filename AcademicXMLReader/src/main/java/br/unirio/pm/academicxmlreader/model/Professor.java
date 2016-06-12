@@ -1,4 +1,5 @@
 package br.unirio.pm.academicxmlreader.model;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,7 @@ public @Getter @Setter class  Professor
     private String codigoCurriculo;
     private String nome;
     private String linhaDePesquisa;
+    private CurriculoProfessor currico;
 
     Professor(String nome, String codigoCurriculo, String linhaDePesquisa)
     {

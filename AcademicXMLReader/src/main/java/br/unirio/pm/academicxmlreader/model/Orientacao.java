@@ -1,15 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.unirio.pm.academicxmlreader.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
- *
- * @author Arthur
+ * 
+ * Classe que representa uma orientação de graduação, mestrado ou doutorado realizada pelo professor
  */
-public class Orientacao 
+public @Getter @Setter class Orientacao 
 {
     
 }

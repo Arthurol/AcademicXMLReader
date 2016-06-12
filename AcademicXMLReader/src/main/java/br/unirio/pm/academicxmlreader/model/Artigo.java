@@ -1,15 +1,38 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.unirio.pm.academicxmlreader.model;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
- * @author Arthur
+ * Classe que representa os artigos cientificos publicados pelos professores dos programas de pós-graduação
  */
-public class Artigo 
+public @Getter @Setter class Artigo 
 {
+    private String titulo;
+    private String anoPublicacao;
+    private String tituloLocalPublicacao; // Titulo da revista ou evento onde o artigo foi publicado
+    private String codigoLocalPublicacao;
+    private String classificacao; // Classificação do evento ou revista onde o artigo foi publicado
     
+    public Artigo()
+    {
+        titulo = "";
+        anoPublicacao = "";
+        tituloLocalPublicacao = "";
+        codigoLocalPublicacao = "";
+        classificacao = "N/C";
+    }
+    
+    /**
+    * Imprime a descrição do artigo
+    */
+    public void print()
+    {
+        System.out.println("\n Artigo: \n" + "Titulo: " + titulo);
+        System.out.println("Ano de Publicação: " + anoPublicacao);
+        System.out.println("Publicado em: " + tituloLocalPublicacao + ", de código: " + codigoLocalPublicacao);
+        System.out.println("Classificação: " + classificacao);
+    }
+       
 }

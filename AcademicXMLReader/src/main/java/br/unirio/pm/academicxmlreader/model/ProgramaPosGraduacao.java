@@ -1,15 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.unirio.pm.academicxmlreader.model;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
- * @author Arthur
+ * Classe que representa um programa de pós-graduação sob avaliação do CAPES
  */
-public class ProgramaPosGraduacao 
+public @Getter @Setter class ProgramaPosGraduacao 
 {
     private String nome;
     
@@ -18,3 +16,5 @@ public class ProgramaPosGraduacao
         nome = "";
     }
 }
+
+

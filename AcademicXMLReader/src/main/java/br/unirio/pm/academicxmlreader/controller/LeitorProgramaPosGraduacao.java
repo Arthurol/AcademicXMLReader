@@ -13,13 +13,14 @@ import org.xml.sax.SAXException;
  */
 public class LeitorProgramaPosGraduacao 
 {
+    private final static String URL_PROGRAMAS = "https://s3.amazonaws.com/posgraduacao/programas.xml";
     /**
     * Transforma a InputStream de entrada em um Document
     */
     public boolean procuraProgramaPosGraduacao(String nomeProgramaPosGraduacao) throws IOException, SAXException, ParserConfigurationException
     {
         ConversorXML conversor = new ConversorXML();
-        Document doc = conversor.xmlToDocument("https://s3.amazonaws.com/posgraduacao/programas.xml");
+        Document doc = conversor.xmlToDocument(URL_PROGRAMAS);
         
         if (doc == null)
         {

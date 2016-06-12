@@ -1,17 +1,17 @@
+import br.unirio.pm.academicxmlreader.controller.ConversorXML;
+import br.unirio.pm.academicxmlreader.controller.LeitorCurriculoProfessor;
 import br.unirio.pm.academicxmlreader.controller.LeitorProfessoresPrograma;
 import br.unirio.pm.academicxmlreader.controller.LeitorProgramaPosGraduacao;
+import br.unirio.pm.academicxmlreader.model.Artigo;
 import br.unirio.pm.academicxmlreader.model.LinhaDePesquisa;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
  *
@@ -25,24 +25,10 @@ public class NovoMain1 {
     public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException
     { 
    
-        // TODO code application logic here
-    /*   
-        Scanner scan = new Scanner(System.in);
-        String entrada;
+        ConversorXML conversor = new ConversorXML();    
         
-        System.out.println("Entre com a url do XML a ser printado na tela:");
-        entrada = scan.next();
-    */
-        
-//        LeitorProgramaPosGraduacao leitor = new LeitorProgramaPosGraduacao();
-        
-      
-/*       
-        if(leitor.procuraProgramaPosGraduacao("PPGI-UNIRIO"))
-            System.out.println("É HORA DO SHOW PORRA");
-        else
-            System.out.println("FAIÔ");
-*/
+//      LeitorProgramaPosGraduacao leitor = new LeitorProgramaPosGraduacao();
+
         LeitorProfessoresPrograma leitorProfs = new LeitorProfessoresPrograma();
         
         List<LinhaDePesquisa> lista = leitorProfs.procuraProfessoresPrograma("PPGI-UNIRIO");
@@ -58,12 +44,34 @@ public class NovoMain1 {
                 {
                     System.out.println("Nome do professor: " + linha.getProfessores().get(j).getNome() + "  código: " + linha.getProfessores().get(j).getCodigoCurriculo());
                 }
-                
                 System.out.println("\n");
             }
         }
         else
-            System.out.println("FAIÔ");
+            System.out.println("FALHA");
+        
+        
+        
+        LeitorCurriculoProfessor leitorCurr = new LeitorCurriculoProfessor();
+        List<Artigo> listaArt = leitorCurr.getArtigosPublicados(conversor.zipToDocument("https://s3.amazonaws.com/posgraduacao/PPGI-UNIRIO/1415781875529432.zip"));
+        
+        for (int i = 0; i < listaArt.size(); i++)
+        {
+            listaArt.get(i).print();
+        }
     }
+    
+//TIRAR ISSO DEPOIS    
+    /*
+    public static void testeLeitura() throws SAXException, IOException, ParserConfigurationException
+    {
+        ConversorXML conversor = new ConversorXML();
+     
+        Document doc;
+        doc = conversor.zipToDocument("https://s3.amazonaws.com/posgraduacao/PPGI-UNIRIO/0821562324429813.zip");
+        NodeList nodeList = doc.getElementsByTagName("ARTIGO-PUBLICADO");
+        System.out.println("\nNumero de artigos publicados pelo professor: " + nodeList.getLength());
+        
+    }*/
     
 }

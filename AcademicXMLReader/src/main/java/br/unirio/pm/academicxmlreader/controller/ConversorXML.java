@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,7 +24,6 @@ import org.xml.sax.SAXException;
 public class ConversorXML 
 {       
     /**
-    *
     * Metodo responsável por retornar uma InputStream, obtida da conexão feita a uma URL
     */
     public InputStream acessarUrl(String urlXml) throws MalformedURLException, IOException
@@ -50,7 +52,7 @@ public class ConversorXML
     
     
     /**
-    * Transforma a InputStream de entrada em um Document
+    * Do acesso à url, é obtida uma InputStream, que é convertida para Document e retornada.
     */
     //DUVIDA: Porque ele te pede para criar uma SAXException?
     public Document xmlToDocument(String urlXml) throws SAXException, IOException, ParserConfigurationException 
@@ -81,5 +83,20 @@ public class ConversorXML
         }
         
         return documento;
+    }
+    
+    /**
+    * Através da url, faz o acesso a um XML compactado em formato ZIP, que é convertido para Document e retornado.
+    */
+    public Document zipToDocument(String urlZip) throws SAXException, IOException, ParserConfigurationException 
+    {
+        InputStream stream = acessarUrl(urlZip);
+        ZipInputStream zipStream = new ZipInputStream(stream);
+        ZipEntry entry = zipStream.getNextEntry();
+   
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        Document doc = dbf.newDocumentBuilder().parse(zipStream, entry.getName());
+        return doc;
     }
 }
