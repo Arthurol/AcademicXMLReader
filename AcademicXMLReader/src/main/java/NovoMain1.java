@@ -1,4 +1,5 @@
 import br.unirio.pm.academicxmlreader.controller.ConversorXML;
+import br.unirio.pm.academicxmlreader.controller.Filtro;
 import br.unirio.pm.academicxmlreader.controller.LeitorCurriculoProfessor;
 import br.unirio.pm.academicxmlreader.controller.LeitorProfessoresPrograma;
 import br.unirio.pm.academicxmlreader.controller.LeitorProgramaPosGraduacao;
@@ -26,7 +27,7 @@ public class NovoMain1 {
      */
     public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException
     { 
-   
+   Filtro filtro=new Filtro();
         ConversorXML conversor = new ConversorXML();    
         
 //      LeitorProgramaPosGraduacao leitor = new LeitorProgramaPosGraduacao();
@@ -124,7 +125,8 @@ public class NovoMain1 {
             if (curr.getBancasGraduacao().size() > 0 || curr.getBancasMestrado().size() > 0 || curr.getBancasDoutorado().size() > 0)
                 System.out.println("\nTeste de funcionamento do montaCurriculoProfessor:\nBeto ja participou de " + (curr.getBancasGraduacao().size() + 
                                         curr.getBancasMestrado().size() + curr.getBancasDoutorado().size()) + " bancas no total (graduação + mestrado + doutorado)");
-                                           
+        System.out.println("\n\n\n\n"); 
+        filtro.filtroTeste();
     }
     
 //TIRAR ISSO DEPOIS    
