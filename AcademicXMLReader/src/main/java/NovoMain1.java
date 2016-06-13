@@ -3,10 +3,12 @@ import br.unirio.pm.academicxmlreader.controller.LeitorCurriculoProfessor;
 import br.unirio.pm.academicxmlreader.controller.LeitorProfessoresPrograma;
 import br.unirio.pm.academicxmlreader.controller.LeitorProgramaPosGraduacao;
 import br.unirio.pm.academicxmlreader.model.Artigo;
+import br.unirio.pm.academicxmlreader.model.CurriculoProfessor;
 import br.unirio.pm.academicxmlreader.model.LinhaDePesquisa;
+import br.unirio.pm.academicxmlreader.model.Orientacao;
+import br.unirio.pm.academicxmlreader.model.ParticipacaoBanca;
 import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -50,15 +52,79 @@ public class NovoMain1 {
         else
             System.out.println("FALHA");
         
+        Document doc;
+        doc = conversor.zipToDocument("https://s3.amazonaws.com/posgraduacao/PPGI-UNIRIO/1920411639358905.zip");
         
         
-        LeitorCurriculoProfessor leitorCurr = new LeitorCurriculoProfessor();
-        List<Artigo> listaArt = leitorCurr.getArtigosPublicados(conversor.zipToDocument("https://s3.amazonaws.com/posgraduacao/PPGI-UNIRIO/1415781875529432.zip"));
+        /*List<Artigo> listaArt = leitorCurr.getArtigosPublicados(conversor.zipToDocument("https://s3.amazonaws.com/posgraduacao/PPGI-UNIRIO/1415781875529432.zip"));
         
         for (int i = 0; i < listaArt.size(); i++)
         {
             listaArt.get(i).print();
-        }
+        }*/
+        
+        
+        LeitorCurriculoProfessor leitorCurr = new LeitorCurriculoProfessor();
+        
+        List<Orientacao> listaOriGradConc = leitorCurr.buscaOrientacoesGraduacaoConcluidas(doc);
+            if (listaOriGradConc == null)
+                System.out.println("Numero de orientações de graduação concluidas pelo professor: 0");
+            else
+                System.out.println("Numero de orientações de graduação concluidas pelo professor: " + listaOriGradConc.size());
+        
+        List<Orientacao> listaOriGradAndam = leitorCurr.buscaOrientacoesGraduacaoAndamento(doc);
+             if (listaOriGradAndam == null)
+                System.out.println("Numero de orientações de graduação em andamento pelo professor: 0");
+             else
+                System.out.println("Numero de orientações de graduação em andamento pelo professor: " + listaOriGradAndam.size());
+             
+        List<Orientacao> listaOriMestConc = leitorCurr.buscaOrientacoesMestradoConcluidas(doc);
+             if (listaOriMestConc == null)
+                System.out.println("Numero de orientações de mestrado concluidas pelo professor: 0");
+             else
+                System.out.println("Numero de orientações de mestrado concluidas pelo professor: " + listaOriMestConc.size());
+             
+        List<Orientacao> listaOriMestAndam = leitorCurr.buscaOrientacoesMestradoAndamento(doc);
+            if (listaOriMestAndam == null)
+               System.out.println("Numero de orientações de mestrado em andamento pelo professor: 0");
+            else
+               System.out.println("Numero de orientações de mestrado em andamento pelo professor: " + listaOriMestAndam.size());
+
+        List<Orientacao> listaOriDoutConc = leitorCurr.buscaOrientacoesDoutoradoConcluidas(doc);
+            if (listaOriDoutConc == null)
+               System.out.println("Numero de orientações de doutorado concluidas pelo professor: 0");
+            else
+               System.out.println("Numero de orientações de doutorado concluidas pelo professor: " + listaOriDoutConc.size());
+
+        List<Orientacao> listaOriDoutAndam = leitorCurr.buscaOrientacoesDoutoradoAndamento(doc);
+            if (listaOriDoutAndam == null)
+               System.out.println("Numero de orientações de doutorado em andamento pelo professor: 0");
+            else
+               System.out.println("Numero de orientações de doutorado em andamento pelo professor: " + listaOriDoutAndam.size());
+            
+        List<ParticipacaoBanca> listaBancaGrad = leitorCurr.buscaParticipacoesBancaGraduacao(doc);
+            if (listaBancaGrad == null)
+               System.out.println("\nNumero de participações do professor em bancas de graduacao: 0");
+            else
+               System.out.println("\nNumero de participações do professor em bancas de graduacao: " + listaBancaGrad.size());
+
+        List<ParticipacaoBanca> listaBancaMestr = leitorCurr.buscaParticipacoesBancaMestrado(doc);
+            if (listaBancaMestr == null)
+               System.out.println("Numero de participações do professor em bancas de mestrado: 0");
+            else
+               System.out.println("Numero de participações do professor em bancas de mestrado: " + listaBancaMestr.size());
+            
+        List<ParticipacaoBanca> listaBancaDout = leitorCurr.buscaParticipacoesBancaDoutorado(doc);
+            if (listaBancaDout == null)
+               System.out.println("Numero de participações do professor em bancas de doutorado: 0");
+            else
+               System.out.println("Numero de participações do professor em bancas de doutorado: " + listaBancaDout.size());
+            
+            CurriculoProfessor curr = leitorCurr.montaCurriculoProfessor("PPGI-UNIRIO", "8020803376969953");
+            if (curr.getBancasGraduacao().size() > 0 || curr.getBancasMestrado().size() > 0 || curr.getBancasDoutorado().size() > 0)
+                System.out.println("\nTeste de funcionamento do montaCurriculoProfessor:\nBeto ja participou de " + (curr.getBancasGraduacao().size() + 
+                                        curr.getBancasMestrado().size() + curr.getBancasDoutorado().size()) + " bancas no total (graduação + mestrado + doutorado)");
+                                           
     }
     
 //TIRAR ISSO DEPOIS    

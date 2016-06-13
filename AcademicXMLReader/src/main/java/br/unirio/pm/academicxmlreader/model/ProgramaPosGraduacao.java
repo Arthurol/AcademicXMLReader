@@ -11,7 +11,7 @@ public @Getter @Setter class ProgramaPosGraduacao
 {
     private String nome;
     
-    ProgramaPosGraduacao()
+    public ProgramaPosGraduacao()
     {
         nome = "";
     }

@@ -9,7 +9,16 @@ import lombok.Setter;
  */
 public @Getter @Setter class ParticipacaoBanca 
 {
+    private String ano;
+    private String tituloTrabalho;
+    private String nomeCandidato;
     
+    public ParticipacaoBanca()
+    {
+        ano = "";
+        tituloTrabalho = "";
+        nomeCandidato = "";
+    }
 }
 
 

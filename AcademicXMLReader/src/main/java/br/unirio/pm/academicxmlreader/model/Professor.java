@@ -12,7 +12,7 @@ public @Getter @Setter class  Professor
     private String codigoCurriculo;
     private String nome;
     private String linhaDePesquisa;
-    private CurriculoProfessor currico;
+    private CurriculoProfessor curriculo;
 
     Professor(String nome, String codigoCurriculo, String linhaDePesquisa)
     {
@@ -26,6 +26,7 @@ public @Getter @Setter class  Professor
         nome = "";
         codigoCurriculo = "";
         linhaDePesquisa = "";
+        curriculo = new CurriculoProfessor();
     }
     
     
