@@ -21,7 +21,7 @@ public @Getter @Setter class Artigo
         anoPublicacao = "";
         tituloLocalPublicacao = "";
         codigoLocalPublicacao = "";
-        classificacao = "N/C";
+        classificacao = "NC";
     }
     
     /**
@@ -29,10 +29,10 @@ public @Getter @Setter class Artigo
     */
     public void print()
     {
-        System.out.println("\n Artigo: \n" + "Titulo: " + titulo);
+        System.out.println("Titulo: " + titulo);
         System.out.println("Ano de Publicação: " + anoPublicacao);
         System.out.println("Publicado em: " + tituloLocalPublicacao + ", de código: " + codigoLocalPublicacao);
-        System.out.println("Classificação: " + classificacao);
+        System.out.println("Classificação: " + classificacao + "\n");
     }
        
 }

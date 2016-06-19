@@ -1,5 +1,7 @@
+import br.unirio.pm.academicxmlreader.controller.CentralDeProcessamento;
 import br.unirio.pm.academicxmlreader.controller.ConversorXML;
 import br.unirio.pm.academicxmlreader.controller.Filtro;
+import br.unirio.pm.academicxmlreader.controller.LeitorClassificacaoQualis;
 import br.unirio.pm.academicxmlreader.controller.LeitorCurriculoProfessor;
 import br.unirio.pm.academicxmlreader.controller.LeitorProfessoresPrograma;
 import br.unirio.pm.academicxmlreader.controller.LeitorProgramaPosGraduacao;
@@ -27,7 +29,23 @@ public class NovoMain1 {
      */
     public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException
     { 
-   Filtro filtro=new Filtro();
+        CentralDeProcessamento central = new CentralDeProcessamento();
+        List<LinhaDePesquisa> lista = central.preenchimentoLinhas("PPGI-UNIRIO");
+        
+        //TESTE
+        CurriculoProfessor curr = lista.get(1).getProfessores().get(5).getCurriculo();
+        System.out.println("Nome do professor: " + lista.get(1).getProfessores().get(5).getNome() + "\nArtigos:\n");
+        
+        for (int a = 0; a < curr.getArtigosRevista().size(); a++)
+        {
+            Artigo art = curr.getArtigosRevista().get(a);
+            System.out.println("Artigo " + a + ":");
+            art.print();
+        }
+        
+     }   
+   /*
+        Filtro filtro=new Filtro();
         ConversorXML conversor = new ConversorXML();    
         
 //      LeitorProgramaPosGraduacao leitor = new LeitorProgramaPosGraduacao();
@@ -65,8 +83,10 @@ public class NovoMain1 {
         }*/
         
         
-        LeitorCurriculoProfessor leitorCurr = new LeitorCurriculoProfessor();
+        //LeitorCurriculoProfessor leitorCurr = new LeitorCurriculoProfessor();
+        //LeitorClassificacaoQualis leitorQualis = new LeitorClassificacaoQualis();
         
+    /*    
         List<Orientacao> listaOriGradConc = leitorCurr.buscaOrientacoesGraduacaoConcluidas(doc);
             if (listaOriGradConc == null)
                 System.out.println("Numero de orientações de graduação concluidas pelo professor: 0");
@@ -127,19 +147,9 @@ public class NovoMain1 {
                                         curr.getBancasMestrado().size() + curr.getBancasDoutorado().size()) + " bancas no total (graduação + mestrado + doutorado)");
         System.out.println("\n\n\n\n"); 
         filtro.filtroTeste();
-    }
+        */
+    
     
 //TIRAR ISSO DEPOIS    
-    /*
-    public static void testeLeitura() throws SAXException, IOException, ParserConfigurationException
-    {
-        ConversorXML conversor = new ConversorXML();
-     
-        Document doc;
-        doc = conversor.zipToDocument("https://s3.amazonaws.com/posgraduacao/PPGI-UNIRIO/0821562324429813.zip");
-        NodeList nodeList = doc.getElementsByTagName("ARTIGO-PUBLICADO");
-        System.out.println("\nNumero de artigos publicados pelo professor: " + nodeList.getLength());
-        
-    }*/
     
 }

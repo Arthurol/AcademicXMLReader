@@ -19,10 +19,9 @@ import org.xml.sax.SAXException;
  */
 public class LeitorCurriculoProfessor 
 {
-    Document docCurriculo;
-
     //Declaração de constantes que serão utilizadas no processo de busca no XML
     
+    //-->Constantes Gerais
     private static final String NATUREZA = "NATUREZA";
     private static final String ANO = "ANO";
     private static final String TITULO = "TITULO";
@@ -31,14 +30,22 @@ public class LeitorCurriculoProfessor
     private static final String ORIENTANDO = "NOME-DO-ORIENTANDO"; 
     private static final String CANDIDATO = "NOME-DO-CANDIDATO"; 
     
-    //--> Artigos
+    //--> Artigos Revista
     private static final String ARTIGO_PUBLICADO = "ARTIGO-PUBLICADO";
     private static final String TITULO_ARTIGO = "TITULO-DO-ARTIGO";
     private static final String ANO_ARTIGO = "ANO-DO-ARTIGO";
-    private static final String DADOS_BASICOS_ARTIGO = "DADOS-BASICOS-DO-ARTIGO";
-    private static final String DADOS_DETALHADOS_ARTIGO = "DETALHAMENTO-DO-ARTIGO";
+    private static final String DADOS_BASICOS_ARTIGO_REVISTA = "DADOS-BASICOS-DO-ARTIGO";
+    private static final String DADOS_DETALHADOS_ARTIGO_REVISTA = "DETALHAMENTO-DO-ARTIGO";
     private static final String REVISTA_EVENTO = "TITULO-DO-PERIODICO-OU-REVISTA";
     private static final String CODIGO_REVISTA_EVENTO = "ISSN";
+    
+    //--> Artigos Evento
+    private static final String ARTIGO_EVENTO = "TRABALHO-EM-EVENTOS";
+    private static final String ANO_TRABALHO = "ANO-DO-TRABALHO";
+    private static final String DADOS_BASICOS_ARTIGO_EVENTO = "DADOS-BASICOS-DO-TRABALHO";
+    private static final String DADOS_DETALHADOS_ARTIGO_EVENTO = "DETALHAMENTO-DO-TRABALHO CLASSIFICACAO-DO-EVENTO";
+    private static final String NOME_EVENTO = "NOME-DO-EVENTO";
+    private static final String CODIGO_EVENTO = "ISBN";
     
     //--> Orientações Graduação
     private static final String ORIENTACAO_GRADUACAO_CONCLUIDA = "OUTRAS-ORIENTACOES-CONCLUIDAS";
@@ -87,9 +94,9 @@ public class LeitorCurriculoProfessor
     
     
     /**
-    * Retorna todos os artigos publicados pelo professor
+    * Retorna todos os artigos publicados em revistas ou periódicos pelo professor
     */
-    public List<Artigo> buscaArtigosPublicados(Document doc)
+    private List<Artigo> buscaArtigosRevista(Document doc)
     {
         NodeList nodeListArtigos = doc.getElementsByTagName(ARTIGO_PUBLICADO);
         
@@ -98,36 +105,82 @@ public class LeitorCurriculoProfessor
         
         List<Artigo> listaArtigos = new ArrayList<>();
         
-                // Inicio da busca nos artigos publicados
-                for (int i = 0; i < nodeListArtigos.getLength(); i++)
+        // Inicio da busca nos artigos publicados
+        for (int i = 0; i < nodeListArtigos.getLength(); i++)
+        {
+            Artigo artigo = new Artigo();
+
+            // pega o artigo de index i da NodeList
+            NodeList nodeArtigo = nodeListArtigos.item(i).getChildNodes();
+
+            for (int j = 0; j < nodeArtigo.getLength(); j++)
+            {
+                // nó utilizado para percorrer os nós filhos do artigo atual e neles buscar dados
+                Node buscador = nodeArtigo.item(j);
+
+                if (buscador.getNodeName().equals(DADOS_BASICOS_ARTIGO_REVISTA))
                 {
-                    Artigo artigo = new Artigo();
-                    
-                    // pega o artigo de index i da NodeList
-                    NodeList nodeArtigo = nodeListArtigos.item(i).getChildNodes();
-                    
-                            for (int j = 0; j < nodeArtigo.getLength(); j++)
-                            {
-                                // nó utilizado para percorrer os nós filhos do artigo atual e neles buscar dados
-                                Node buscador = nodeArtigo.item(j);
-                                
-                                if (buscador.getNodeName().equals(DADOS_BASICOS_ARTIGO))
-                                {
-                                    // recupera o titulo e o ano de publicação do artigo
-                                    artigo.setTitulo(buscador.getAttributes().getNamedItem(TITULO_ARTIGO).getNodeValue());
-                                    artigo.setAnoPublicacao(buscador.getAttributes().getNamedItem(ANO_ARTIGO).getNodeValue());
-                                    continue;
-                                }
-                                
-                                if (buscador.getNodeName().equals(DADOS_DETALHADOS_ARTIGO))
-                                {
-                                    // recupera o titulo e código da revista/evento onde o artigo foi publicado
-                                    artigo.setTituloLocalPublicacao(buscador.getAttributes().getNamedItem(REVISTA_EVENTO).getNodeValue());
-                                    artigo.setCodigoLocalPublicacao(buscador.getAttributes().getNamedItem(CODIGO_REVISTA_EVENTO).getNodeValue());
-                                }
-                            }
-                    listaArtigos.add(artigo);
+                    // recupera o titulo e o ano de publicação do artigo
+                    artigo.setTitulo(buscador.getAttributes().getNamedItem(TITULO_ARTIGO).getNodeValue());
+                    artigo.setAnoPublicacao(buscador.getAttributes().getNamedItem(ANO_ARTIGO).getNodeValue());
+                    continue;
                 }
+
+                if (buscador.getNodeName().equals(DADOS_DETALHADOS_ARTIGO_REVISTA))
+                {
+                    // recupera o titulo e código da revista/evento onde o artigo foi publicado
+                    artigo.setTituloLocalPublicacao(buscador.getAttributes().getNamedItem(REVISTA_EVENTO).getNodeValue());
+                    artigo.setCodigoLocalPublicacao(buscador.getAttributes().getNamedItem(CODIGO_REVISTA_EVENTO).getNodeValue());
+                }
+            }
+            listaArtigos.add(artigo);
+        }
+                
+        return listaArtigos;
+    }
+    
+    /**
+    * Retorna todos os artigos publicados em eventos pelo professor
+    */
+    private List<Artigo> buscaArtigosEvento(Document doc)
+    {
+        NodeList nodeListArtigos = doc.getElementsByTagName(ARTIGO_EVENTO);
+        
+        if (nodeListArtigos.getLength() == 0)
+            return null;
+        
+        List<Artigo> listaArtigos = new ArrayList<>();
+        
+        // Inicio da busca nos artigos publicados
+        for (int i = 0; i < nodeListArtigos.getLength(); i++)
+        {
+            Artigo artigo = new Artigo();
+
+            // pega o artigo de index i da NodeList
+            NodeList nodeArtigo = nodeListArtigos.item(i).getChildNodes();
+
+            for (int j = 0; j < nodeArtigo.getLength(); j++)
+            {
+                // nó utilizado para percorrer os nós filhos do artigo atual e neles buscar dados
+                Node buscador = nodeArtigo.item(j);
+
+                if (buscador.getNodeName().equals(DADOS_BASICOS_ARTIGO_EVENTO))
+                {
+                    // recupera o titulo e o ano de publicação do artigo
+                    artigo.setTitulo(buscador.getAttributes().getNamedItem(TITULO_TRABALHO).getNodeValue());
+                    artigo.setAnoPublicacao(buscador.getAttributes().getNamedItem(ANO_TRABALHO).getNodeValue());
+                    continue;
+                }
+
+                if (buscador.getNodeName().equals(DADOS_DETALHADOS_ARTIGO_EVENTO))
+                {
+                    // recupera o titulo e código da revista/evento onde o artigo foi publicado
+                    artigo.setTituloLocalPublicacao(buscador.getAttributes().getNamedItem(NOME_EVENTO).getNodeValue());
+                    artigo.setCodigoLocalPublicacao(buscador.getAttributes().getNamedItem(CODIGO_EVENTO).getNodeValue());
+                }
+            }
+            listaArtigos.add(artigo);
+        }
                 
         return listaArtigos;
     }
@@ -135,7 +188,7 @@ public class LeitorCurriculoProfessor
     /**
     * Retorna todas as orientações de projeto final de graduação concluídas que o professor 
     */
-    public List<Orientacao> buscaOrientacoesGraduacaoConcluidas(Document doc)
+    private List<Orientacao> buscaOrientacoesGraduacaoConcluidas(Document doc)
     {
         NodeList nodeListOrientacoes = doc.getElementsByTagName(ORIENTACAO_GRADUACAO_CONCLUIDA);
         
@@ -144,49 +197,49 @@ public class LeitorCurriculoProfessor
         
         List<Orientacao> listaOrientacoes = new ArrayList<>();
         
-                // Inicio da busca nas orientações de graduacao concluidas
-                for (int i = 0; i < nodeListOrientacoes.getLength(); i++)
-                {
-                    Orientacao orientacao = new Orientacao();
-                    
-                    // pega a orientação de index i da NodeList
-                    NodeList nodeOrientacao = nodeListOrientacoes.item(i).getChildNodes();
-                    
-                            for (int j = 0; j < nodeOrientacao.getLength(); j++)
-                            {
-                                // nó utilizado para percorrer os nós filhos da orientacao e neles buscar dados
-                                Node buscador = nodeOrientacao.item(j);
-                                
-                                if (buscador.getNodeName().equals(DADOS_BASICOS_ORIENTACAO_GRADUACAO_CONCLUIDA))
-                                { 
-                                    if (buscador.getAttributes().getNamedItem(NATUREZA).getNodeValue().equalsIgnoreCase(TCC_CONCLUIDO))
-                                    {           
-                                        // recupera o ano da orientação e o título do projeto
-                                        orientacao.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
-                                        orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
-                                        continue;
-                                    }
-                                    else
-                                        orientacao = null;
-                                        break;
-                                    
-                                }
-                                
-                                if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_GRADUACAO_CONCLUIDA))
-                                    // recupera o nome do orientando
-                                    orientacao.setNomeOrientado(buscador.getAttributes().getNamedItem(ORIENTADO).getNodeValue());
-                            }
-                    
-                    if (orientacao != null)
-                        listaOrientacoes.add(orientacao);
+        // Inicio da busca nas orientações de graduacao concluidas
+        for (int i = 0; i < nodeListOrientacoes.getLength(); i++)
+        {
+            Orientacao orientacao = new Orientacao();
+
+            // pega a orientação de index i da NodeList
+            NodeList nodeOrientacao = nodeListOrientacoes.item(i).getChildNodes();
+
+            for (int j = 0; j < nodeOrientacao.getLength(); j++)
+            {
+                // nó utilizado para percorrer os nós filhos da orientacao e neles buscar dados
+                Node buscador = nodeOrientacao.item(j);
+
+                if (buscador.getNodeName().equals(DADOS_BASICOS_ORIENTACAO_GRADUACAO_CONCLUIDA))
+                { 
+                    if (buscador.getAttributes().getNamedItem(NATUREZA).getNodeValue().equalsIgnoreCase(TCC_CONCLUIDO))
+                    {           
+                        // recupera o ano da orientação e o título do projeto
+                        orientacao.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
+                        orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
+                        continue;
+                    }
+                    else
+                        orientacao = null;
+                        break;
+
                 }
+
+                if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_GRADUACAO_CONCLUIDA))
+                    // recupera o nome do orientando
+                    orientacao.setNomeOrientado(buscador.getAttributes().getNamedItem(ORIENTADO).getNodeValue());
+            }
+
+            if (orientacao != null)
+                listaOrientacoes.add(orientacao);
+        }
         return listaOrientacoes;
     }
     
     /**
     * Retorna todas as orientações de projeto final de graduação que estão em andamento dadas pelo professor
     */
-    public List<Orientacao> buscaOrientacoesGraduacaoAndamento(Document doc)
+    private List<Orientacao> buscaOrientacoesGraduacaoAndamento(Document doc)
     {
         NodeList nodeListOrientacoes = doc.getElementsByTagName(ORIENTACAO_GRADUACAO_ANDAMENTO);
         
@@ -195,44 +248,44 @@ public class LeitorCurriculoProfessor
         
         List<Orientacao> listaOrientacoes = new ArrayList<>();
         
-                // Inicio da busca nas orientações de graduacao em andamento
-                for (int i = 0; i < nodeListOrientacoes.getLength(); i++)
-                {
-                    Orientacao orientacao = new Orientacao();
-                    
-                    // pega a orientação de index i da NodeList
-                    NodeList nodeOrientacao = nodeListOrientacoes.item(i).getChildNodes();
-                    
-                            for (int j = 0; j < nodeOrientacao.getLength(); j++)
-                            {
-                                // nó utilizado para percorrer os nós filhos da orientacao e neles buscar dados
-                                Node buscador = nodeOrientacao.item(j);
-                                
-                                if (buscador.getNodeName().equals(DADOS_BASICOS_ORIENTACAO_GRADUACAO_ANDAMENTO))
-                                { 
-                                    if (buscador.getAttributes().getNamedItem(NATUREZA).getNodeValue().equalsIgnoreCase(TCC_ANDAMENTO))
-                                    {       
-                                        // recupera o ano da orientação e o título do projeto
-                                        orientacao.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
-                                        orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO_TRABALHO).getNodeValue());
-                                        continue;
-                                    }
-                                }
-                                
-                                if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_GRADUACAO_ANDAMENTO))
-                                    // recupera o nome do orientando
-                                    orientacao.setNomeOrientado(buscador.getAttributes().getNamedItem(ORIENTANDO).getNodeValue());
-                                
-                            }
-                    listaOrientacoes.add(orientacao);
+        // Inicio da busca nas orientações de graduacao em andamento
+        for (int i = 0; i < nodeListOrientacoes.getLength(); i++)
+        {
+            Orientacao orientacao = new Orientacao();
+
+            // pega a orientação de index i da NodeList
+            NodeList nodeOrientacao = nodeListOrientacoes.item(i).getChildNodes();
+
+            for (int j = 0; j < nodeOrientacao.getLength(); j++)
+            {
+                // nó utilizado para percorrer os nós filhos da orientacao e neles buscar dados
+                Node buscador = nodeOrientacao.item(j);
+
+                if (buscador.getNodeName().equals(DADOS_BASICOS_ORIENTACAO_GRADUACAO_ANDAMENTO))
+                { 
+                    if (buscador.getAttributes().getNamedItem(NATUREZA).getNodeValue().equalsIgnoreCase(TCC_ANDAMENTO))
+                    {       
+                        // recupera o ano da orientação e o título do projeto
+                        orientacao.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
+                        orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO_TRABALHO).getNodeValue());
+                        continue;
+                    }
                 }
+
+                if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_GRADUACAO_ANDAMENTO))
+                    // recupera o nome do orientando
+                    orientacao.setNomeOrientado(buscador.getAttributes().getNamedItem(ORIENTANDO).getNodeValue());
+
+            }
+            listaOrientacoes.add(orientacao);
+        }
         return listaOrientacoes;
     }
     
     /**
     * Retorna todas as orientações de mestrado concluídas que o professor deu
     */
-    public List<Orientacao> buscaOrientacoesMestradoConcluidas(Document doc)
+    private List<Orientacao> buscaOrientacoesMestradoConcluidas(Document doc)
     {
         NodeList nodeListOrientacoes = doc.getElementsByTagName(ORIENTACAO_MESTRADO_CONCLUIDA);
         
@@ -241,40 +294,40 @@ public class LeitorCurriculoProfessor
         
         List<Orientacao> listaOrientacoes = new ArrayList<>();
         
-                // Inicio da busca nas orientações de graduacao concluidas
-                for (int i = 0; i < nodeListOrientacoes.getLength(); i++)
-                {
-                    Orientacao orientacao = new Orientacao();
-                    
-                    // pega a orientação de index i da NodeList
-                    NodeList nodeOrientacao = nodeListOrientacoes.item(i).getChildNodes();
-                    
-                            for (int j = 0; j < nodeOrientacao.getLength(); j++)
-                            {
-                                // nó utilizado para percorrer os nós filhos da orientação e neles buscar dados
-                                Node buscador = nodeOrientacao.item(j);
-                                
-                                if (buscador.getNodeName().equals(DADOS_BASICOS_ORIENTACAO_MESTRADO_CONCLUIDA))
-                                {                          
-                                    // recupera o ano da orientação e o título do projeto
-                                    orientacao.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
-                                    orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
-                                    continue;  
-                                }
-                                
-                                if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_MESTRADO_CONCLUIDA))
-                                    // recupera o nome do orientado
-                                    orientacao.setNomeOrientado(buscador.getAttributes().getNamedItem(ORIENTADO).getNodeValue());
-                            }
-                    listaOrientacoes.add(orientacao);
+        // Inicio da busca nas orientações de graduacao concluidas
+        for (int i = 0; i < nodeListOrientacoes.getLength(); i++)
+        {
+            Orientacao orientacao = new Orientacao();
+
+            // pega a orientação de index i da NodeList
+            NodeList nodeOrientacao = nodeListOrientacoes.item(i).getChildNodes();
+
+            for (int j = 0; j < nodeOrientacao.getLength(); j++)
+            {
+                // nó utilizado para percorrer os nós filhos da orientação e neles buscar dados
+                Node buscador = nodeOrientacao.item(j);
+
+                if (buscador.getNodeName().equals(DADOS_BASICOS_ORIENTACAO_MESTRADO_CONCLUIDA))
+                {                          
+                    // recupera o ano da orientação e o título do projeto
+                    orientacao.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
+                    orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
+                    continue;  
                 }
+
+                if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_MESTRADO_CONCLUIDA))
+                    // recupera o nome do orientado
+                    orientacao.setNomeOrientado(buscador.getAttributes().getNamedItem(ORIENTADO).getNodeValue());
+            }
+            listaOrientacoes.add(orientacao);
+        }
         return listaOrientacoes;
     }
     
     /**
     * Retorna todas as orientações de mestrado que estão em andamento dadas pelo professor
     */
-    public List<Orientacao> buscaOrientacoesMestradoAndamento(Document doc)
+    private List<Orientacao> buscaOrientacoesMestradoAndamento(Document doc)
     {
         NodeList nodeListOrientacoes = doc.getElementsByTagName(ORIENTACAO_MESTRADO_ANDAMENTO);
         
@@ -283,40 +336,40 @@ public class LeitorCurriculoProfessor
         
         List<Orientacao> listaOrientacoes = new ArrayList<>();
         
-                // Inicio da busca nas orientações de graduacao concluidas
-                for (int i = 0; i < nodeListOrientacoes.getLength(); i++)
-                {
-                    Orientacao orientacao = new Orientacao();
-                    
-                    // pega a orientação de index i da NodeList
-                    NodeList nodeOrientacao = nodeListOrientacoes.item(i).getChildNodes();
-                    
-                            for (int j = 0; j < nodeOrientacao.getLength(); j++)
-                            {
-                                // nó utilizado para percorrer os nós filhos da orientação e neles buscar dados
-                                Node buscador = nodeOrientacao.item(j);
-                                
-                                if (buscador.getNodeName().equals(DADOS_BASICOS_ORIENTACAO_MESTRADO_ANDAMENTO))
-                                {                          
-                                    // recupera o ano da orientação e o título do projeto
-                                    orientacao.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
-                                    orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO_TRABALHO).getNodeValue());
-                                    continue;  
-                                }
-                                
-                                if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_MESTRADO_ANDAMENTO))
-                                    // recupera o nome do orientado
-                                    orientacao.setNomeOrientado(buscador.getAttributes().getNamedItem(ORIENTANDO).getNodeValue());
-                            }
-                    listaOrientacoes.add(orientacao);
+        // Inicio da busca nas orientações de graduacao concluidas
+        for (int i = 0; i < nodeListOrientacoes.getLength(); i++)
+        {
+            Orientacao orientacao = new Orientacao();
+
+            // pega a orientação de index i da NodeList
+            NodeList nodeOrientacao = nodeListOrientacoes.item(i).getChildNodes();
+
+            for (int j = 0; j < nodeOrientacao.getLength(); j++)
+            {
+                // nó utilizado para percorrer os nós filhos da orientação e neles buscar dados
+                Node buscador = nodeOrientacao.item(j);
+
+                if (buscador.getNodeName().equals(DADOS_BASICOS_ORIENTACAO_MESTRADO_ANDAMENTO))
+                {                          
+                    // recupera o ano da orientação e o título do projeto
+                    orientacao.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
+                    orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO_TRABALHO).getNodeValue());
+                    continue;  
                 }
+
+                if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_MESTRADO_ANDAMENTO))
+                    // recupera o nome do orientado
+                    orientacao.setNomeOrientado(buscador.getAttributes().getNamedItem(ORIENTANDO).getNodeValue());
+            }
+            listaOrientacoes.add(orientacao);
+        }
         return listaOrientacoes;
     }
     
     /**
     * Retorna todas as orientações de doutorado concluídas que o professor deu
     */
-    public List<Orientacao> buscaOrientacoesDoutoradoConcluidas(Document doc)
+    private List<Orientacao> buscaOrientacoesDoutoradoConcluidas(Document doc)
     {
         NodeList nodeListOrientacoes = doc.getElementsByTagName(ORIENTACAO_DOUTORADO_CONCLUIDA);
         
@@ -325,40 +378,40 @@ public class LeitorCurriculoProfessor
         
         List<Orientacao> listaOrientacoes = new ArrayList<>();
         
-                // Inicio da busca nas orientações de graduacao concluidas
-                for (int i = 0; i < nodeListOrientacoes.getLength(); i++)
-                {
-                    Orientacao orientacao = new Orientacao();
-                    
-                    // pega a orientação de index i da NodeList
-                    NodeList nodeOrientacao = nodeListOrientacoes.item(i).getChildNodes();
-                    
-                            for (int j = 0; j < nodeOrientacao.getLength(); j++)
-                            {
-                                // nó utilizado para percorrer os nós filhos da orientação e neles buscar dados
-                                Node buscador = nodeOrientacao.item(j);
-                                
-                                if (buscador.getNodeName().equals(DADOS_BASICOS_ORIENTACAO_DOUTORADO_CONCLUIDA))
-                                {                          
-                                    // recupera o ano da orientação e o título do projeto
-                                    orientacao.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
-                                    orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
-                                    continue;  
-                                }
-                                
-                                if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_DOUTORADO_CONCLUIDA))
-                                    // recupera o nome do orientado
-                                    orientacao.setNomeOrientado(buscador.getAttributes().getNamedItem(ORIENTADO).getNodeValue());
-                            }
-                    listaOrientacoes.add(orientacao);
+        // Inicio da busca nas orientações de graduacao concluidas
+        for (int i = 0; i < nodeListOrientacoes.getLength(); i++)
+        {
+            Orientacao orientacao = new Orientacao();
+
+            // pega a orientação de index i da NodeList
+            NodeList nodeOrientacao = nodeListOrientacoes.item(i).getChildNodes();
+
+            for (int j = 0; j < nodeOrientacao.getLength(); j++)
+            {
+                // nó utilizado para percorrer os nós filhos da orientação e neles buscar dados
+                Node buscador = nodeOrientacao.item(j);
+
+                if (buscador.getNodeName().equals(DADOS_BASICOS_ORIENTACAO_DOUTORADO_CONCLUIDA))
+                {                          
+                    // recupera o ano da orientação e o título do projeto
+                    orientacao.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
+                    orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
+                    continue;  
                 }
+
+                if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_DOUTORADO_CONCLUIDA))
+                    // recupera o nome do orientado
+                    orientacao.setNomeOrientado(buscador.getAttributes().getNamedItem(ORIENTADO).getNodeValue());
+            }
+            listaOrientacoes.add(orientacao);
+        }
         return listaOrientacoes;
     }
     
     /**
     * Retorna todas as orientações de doutorado que estão em andamento dadas pelo professor
     */
-    public List<Orientacao> buscaOrientacoesDoutoradoAndamento(Document doc)
+    private List<Orientacao> buscaOrientacoesDoutoradoAndamento(Document doc)
     {
         NodeList nodeListOrientacoes = doc.getElementsByTagName(ORIENTACAO_DOUTORADO_ANDAMENTO);
         
@@ -367,40 +420,40 @@ public class LeitorCurriculoProfessor
         
         List<Orientacao> listaOrientacoes = new ArrayList<>();
         
-                // Inicio da busca nas orientações de graduacao concluidas
-                for (int i = 0; i < nodeListOrientacoes.getLength(); i++)
-                {
-                    Orientacao orientacao = new Orientacao();
-                    
-                    // pega a orientação de index i da NodeList
-                    NodeList nodeOrientacao = nodeListOrientacoes.item(i).getChildNodes();
-                    
-                            for (int j = 0; j < nodeOrientacao.getLength(); j++)
-                            {
-                                // nó utilizado para percorrer os nós filhos da orientação e neles buscar dados
-                                Node buscador = nodeOrientacao.item(j);
-                                
-                                if (buscador.getNodeName().equals(DADOS_BASICOS_ORIENTACAO_DOUTORADO_ANDAMENTO))
-                                {                          
-                                    // recupera o ano da orientação e o título do projeto
-                                    orientacao.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
-                                    orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO_TRABALHO).getNodeValue());
-                                    continue;  
-                                }
-                                
-                                if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_DOUTORADO_ANDAMENTO))
-                                    // recupera o nome do orientado
-                                    orientacao.setNomeOrientado(buscador.getAttributes().getNamedItem(ORIENTANDO).getNodeValue());
-                            }
-                    listaOrientacoes.add(orientacao);
+        // Inicio da busca nas orientações de graduacao concluidas
+        for (int i = 0; i < nodeListOrientacoes.getLength(); i++)
+        {
+            Orientacao orientacao = new Orientacao();
+
+            // pega a orientação de index i da NodeList
+            NodeList nodeOrientacao = nodeListOrientacoes.item(i).getChildNodes();
+
+            for (int j = 0; j < nodeOrientacao.getLength(); j++)
+            {
+                // nó utilizado para percorrer os nós filhos da orientação e neles buscar dados
+                Node buscador = nodeOrientacao.item(j);
+
+                if (buscador.getNodeName().equals(DADOS_BASICOS_ORIENTACAO_DOUTORADO_ANDAMENTO))
+                {                          
+                    // recupera o ano da orientação e o título do projeto
+                    orientacao.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
+                    orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO_TRABALHO).getNodeValue());
+                    continue;  
                 }
+
+                if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_DOUTORADO_ANDAMENTO))
+                    // recupera o nome do orientado
+                    orientacao.setNomeOrientado(buscador.getAttributes().getNamedItem(ORIENTANDO).getNodeValue());
+            }
+            listaOrientacoes.add(orientacao);
+        }
         return listaOrientacoes;
     }
     
     /**
     * Retorna todas as participações que o professor teve em bancas avaliadoras de trabalhos finais de graduação
     */
-    public List<ParticipacaoBanca> buscaParticipacoesBancaGraduacao(Document doc)
+    private List<ParticipacaoBanca> buscaParticipacoesBancaGraduacao(Document doc)
     {
         NodeList nodeListBancas = doc.getElementsByTagName(BANCA_GRADUACAO);
         
@@ -409,40 +462,40 @@ public class LeitorCurriculoProfessor
         
         List<ParticipacaoBanca> listaBancas = new ArrayList<>();
         
-                // Inicio da busca nas participacoes em bancas
-                for (int i = 0; i < nodeListBancas.getLength(); i++)
-                {
-                    ParticipacaoBanca banca = new ParticipacaoBanca();
-                    
-                    // pega a participacao em banca de index i da NodeList
-                    NodeList nodeBanca = nodeListBancas.item(i).getChildNodes();
-                    
-                            for (int j = 0; j < nodeBanca.getLength(); j++)
-                            {
-                                // nó utilizado para percorrer os nós filhos da participacao em banca e neles buscar dados
-                                Node buscador = nodeBanca.item(j);
-                                
-                                if (buscador.getNodeName().equals(DADOS_BASICOS_BANCA_GRADUACAO))
-                                {                          
-                                    // recupera o ano da banca e o título do trabalho
-                                    banca.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
-                                    banca.setTituloTrabalho(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
-                                    continue;  
-                                }
-                                
-                                if (buscador.getNodeName().equals(DETALHAMENTO_BANCA_GRADUACAO))
-                                    // recupera o nome do candidato
-                                    banca.setNomeCandidato(buscador.getAttributes().getNamedItem(CANDIDATO).getNodeValue());
-                            }
-                    listaBancas.add(banca);
+        // Inicio da busca nas participacoes em bancas
+        for (int i = 0; i < nodeListBancas.getLength(); i++)
+        {
+            ParticipacaoBanca banca = new ParticipacaoBanca();
+
+            // pega a participacao em banca de index i da NodeList
+            NodeList nodeBanca = nodeListBancas.item(i).getChildNodes();
+
+            for (int j = 0; j < nodeBanca.getLength(); j++)
+            {
+                // nó utilizado para percorrer os nós filhos da participacao em banca e neles buscar dados
+                Node buscador = nodeBanca.item(j);
+
+                if (buscador.getNodeName().equals(DADOS_BASICOS_BANCA_GRADUACAO))
+                {                          
+                    // recupera o ano da banca e o título do trabalho
+                    banca.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
+                    banca.setTituloTrabalho(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
+                    continue;  
                 }
+
+                if (buscador.getNodeName().equals(DETALHAMENTO_BANCA_GRADUACAO))
+                    // recupera o nome do candidato
+                    banca.setNomeCandidato(buscador.getAttributes().getNamedItem(CANDIDATO).getNodeValue());
+            }
+            listaBancas.add(banca);
+        }
         return listaBancas;
     }
     
     /**
     * Retorna todas as participações que o professor teve em bancas avaliadoras de dissertações de mestrado
     */
-    public List<ParticipacaoBanca> buscaParticipacoesBancaMestrado(Document doc)
+    private List<ParticipacaoBanca> buscaParticipacoesBancaMestrado(Document doc)
     {
         NodeList nodeListBancas = doc.getElementsByTagName(BANCA_MESTRADO);
         
@@ -451,40 +504,40 @@ public class LeitorCurriculoProfessor
         
         List<ParticipacaoBanca> listaBancas = new ArrayList<>();
         
-                // Inicio da busca nas participacoes em bancas
-                for (int i = 0; i < nodeListBancas.getLength(); i++)
-                {
-                    ParticipacaoBanca banca = new ParticipacaoBanca();
-                    
-                    // pega a participacao em banca de index i da NodeList
-                    NodeList nodeBanca = nodeListBancas.item(i).getChildNodes();
-                    
-                            for (int j = 0; j < nodeBanca.getLength(); j++)
-                            {
-                                // nó utilizado para percorrer os nós filhos da participacao em banca e neles buscar dados
-                                Node buscador = nodeBanca.item(j);
-                                
-                                if (buscador.getNodeName().equals(DADOS_BASICOS_BANCA_MESTRADO))
-                                {                          
-                                    // recupera o ano da banca e o título do trabalho
-                                    banca.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
-                                    banca.setTituloTrabalho(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
-                                    continue;  
-                                }
-                                
-                                if (buscador.getNodeName().equals(DETALHAMENTO_BANCA_MESTRADO))
-                                    // recupera o nome do candidato
-                                    banca.setNomeCandidato(buscador.getAttributes().getNamedItem(CANDIDATO).getNodeValue());
-                            }
-                    listaBancas.add(banca);
+        // Inicio da busca nas participacoes em bancas
+        for (int i = 0; i < nodeListBancas.getLength(); i++)
+        {
+            ParticipacaoBanca banca = new ParticipacaoBanca();
+
+            // pega a participacao em banca de index i da NodeList
+            NodeList nodeBanca = nodeListBancas.item(i).getChildNodes();
+
+            for (int j = 0; j < nodeBanca.getLength(); j++)
+            {
+                // nó utilizado para percorrer os nós filhos da participacao em banca e neles buscar dados
+                Node buscador = nodeBanca.item(j);
+
+                if (buscador.getNodeName().equals(DADOS_BASICOS_BANCA_MESTRADO))
+                {                          
+                    // recupera o ano da banca e o título do trabalho
+                    banca.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
+                    banca.setTituloTrabalho(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
+                    continue;  
                 }
+
+                if (buscador.getNodeName().equals(DETALHAMENTO_BANCA_MESTRADO))
+                    // recupera o nome do candidato
+                    banca.setNomeCandidato(buscador.getAttributes().getNamedItem(CANDIDATO).getNodeValue());
+            }
+            listaBancas.add(banca);
+        }
         return listaBancas;
     }
     
     /**
     * Retorna todas as participações que o professor teve em bancas avaliadoras de defesas de tese de doutorado
     */
-    public List<ParticipacaoBanca> buscaParticipacoesBancaDoutorado(Document doc)
+    private List<ParticipacaoBanca> buscaParticipacoesBancaDoutorado(Document doc)
     {
         NodeList nodeListBancas = doc.getElementsByTagName(BANCA_DOUTORADO);
         
@@ -493,45 +546,44 @@ public class LeitorCurriculoProfessor
         
         List<ParticipacaoBanca> listaBancas = new ArrayList<>();
         
-                // Inicio da busca nas participacoes em bancas
-                for (int i = 0; i < nodeListBancas.getLength(); i++)
-                {
-                    ParticipacaoBanca banca = new ParticipacaoBanca();
-                    
-                    // pega a participacao em banca de index i da NodeList
-                    NodeList nodeBanca = nodeListBancas.item(i).getChildNodes();
-                    
-                            for (int j = 0; j < nodeBanca.getLength(); j++)
-                            {
-                                // nó utilizado para percorrer os nós filhos da participacao em banca e neles buscar dados
-                                Node buscador = nodeBanca.item(j);
-                                
-                                if (buscador.getNodeName().equals(DADOS_BASICOS_BANCA_DOUTORADO))
-                                {                          
-                                    // recupera o ano da banca e o título do trabalho
-                                    banca.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
-                                    banca.setTituloTrabalho(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
-                                    continue;  
-                                }
-                                
-                                if (buscador.getNodeName().equals(DETALHAMENTO_BANCA_DOUTORADO))
-                                    // recupera o nome do candidato
-                                    banca.setNomeCandidato(buscador.getAttributes().getNamedItem(CANDIDATO).getNodeValue());
-                            }
-                    listaBancas.add(banca);
+        // Inicio da busca nas participacoes em bancas
+        for (int i = 0; i < nodeListBancas.getLength(); i++)
+        {
+            ParticipacaoBanca banca = new ParticipacaoBanca();
+
+            // pega a participacao em banca de index i da NodeList
+            NodeList nodeBanca = nodeListBancas.item(i).getChildNodes();
+
+            for (int j = 0; j < nodeBanca.getLength(); j++)
+            {
+                // nó utilizado para percorrer os nós filhos da participacao em banca e neles buscar dados
+                Node buscador = nodeBanca.item(j);
+
+                if (buscador.getNodeName().equals(DADOS_BASICOS_BANCA_DOUTORADO))
+                {                          
+                    // recupera o ano da banca e o título do trabalho
+                    banca.setAno(buscador.getAttributes().getNamedItem(ANO).getNodeValue());
+                    banca.setTituloTrabalho(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
+                    continue;  
                 }
+
+                if (buscador.getNodeName().equals(DETALHAMENTO_BANCA_DOUTORADO))
+                    // recupera o nome do candidato
+                    banca.setNomeCandidato(buscador.getAttributes().getNamedItem(CANDIDATO).getNodeValue());
+            }
+            listaBancas.add(banca);
+        }
         return listaBancas;
     }
     
     /**
     * Faz a chamada de todos os métodos de busca no curriculo.xml e retorna um curriculo de professor
     */
-//FALTA TERMINAR
     public CurriculoProfessor montaCurriculoProfessor(String nomeProgramaPosGraduacao, String codigoProfessor) throws SAXException, IOException, ParserConfigurationException
     {
         String urlCurriculoProfessor = "https://s3.amazonaws.com/posgraduacao/" + nomeProgramaPosGraduacao + "/" + codigoProfessor + ".zip";
         ConversorXML conversor = new ConversorXML();
-        docCurriculo = conversor.zipToDocument(urlCurriculoProfessor);
+        Document docCurriculo = conversor.zipToDocument(urlCurriculoProfessor);
         
         if (docCurriculo == null)
         {
@@ -540,10 +592,10 @@ public class LeitorCurriculoProfessor
         }
         
         CurriculoProfessor curriculo = new CurriculoProfessor();
-        // AINDA FALTA FAZER A CLASSIFICAÇÃO DO QUALIS, E PROVAVEVLMENTE ESSE DOC VAI SAIR DOS PARAMETROS DOS METODOS GET (
-        //  ao inves disso vão utilizar o atributo doc da classe )
-        curriculo.setArtigosEvento(buscaArtigosPublicados(docCurriculo));
-        // provavelmente aqui haverá a chamada para a classe de classificação qualis
+        
+        curriculo.setArtigosRevista(buscaArtigosRevista(docCurriculo));
+        curriculo.setArtigosEvento(buscaArtigosEvento(docCurriculo)); 
+        
         curriculo.setOrientacoesGraduacaoConcluidas(buscaOrientacoesGraduacaoConcluidas(docCurriculo));
         curriculo.setOrientacoesGraduacaoAndamento(buscaOrientacoesGraduacaoAndamento(docCurriculo));
         curriculo.setOrientacoesMestradoConcluidas(buscaOrientacoesMestradoConcluidas(docCurriculo));

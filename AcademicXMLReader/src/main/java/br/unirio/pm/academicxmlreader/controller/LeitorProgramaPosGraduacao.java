@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 public class LeitorProgramaPosGraduacao 
 {
     private final static String URL_PROGRAMAS = "https://s3.amazonaws.com/posgraduacao/programas.xml";
+    
     /**
     * Transforma a InputStream de entrada em um Document
     */
@@ -37,22 +38,19 @@ public class LeitorProgramaPosGraduacao
             return false;
         }
         
-                // Para cada nó 'programa' é feita a busca pelo atributo com o mesmo nome da String de entrada do método 
-                for(int i = 0; i < listaProgramas.getLength(); i++)
-                {
-                     Node node = listaProgramas.item(i);
-//TESTE (VAI SAIR DAQUI DEPOIS)
-System.out.println("No " + i + ": " + node.getNodeName());
+        // Para cada nó 'programa' é feita a busca pelo atributo com o mesmo nome da String de entrada do método 
+        for(int i = 0; i < listaProgramas.getLength(); i++)
+        {
+             Node node = listaProgramas.item(i);
 
-                    // Para cada no 'i' o item 'j' assumira o nome de cada um dos atributos existentes
-                    for (int j = 0; j < listaProgramas.item(i).getAttributes().getLength(); j++) 
-                    {
-//TESTE (VAI SAIR DAQUI DEPOIS)
-System.out.println("Atributo " + i + ": " + node.getAttributes().item(j).toString());
-                        if (node.getAttributes().item(j).getNodeValue().equals(nomeProgramaPosGraduacao))
-                            return true;
-                    }
-                }  
-    return false;
+            // Para cada nó 'i' o item 'j' assumirá o nome de cada um dos atributos existentes
+            for (int j = 0; j < listaProgramas.item(i).getAttributes().getLength(); j++) 
+            {
+                if (node.getAttributes().item(j).getNodeValue().equals(nomeProgramaPosGraduacao))
+                    return true;
+            }
+        } 
+                
+        return false;
     }
 }

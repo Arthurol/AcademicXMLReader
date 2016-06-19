@@ -7,7 +7,7 @@ import lombok.Setter;
 
 /**
  *
- * @author Arthur
+ * Classe que representa um Curriculo de professor, com artigos publicados, orientações dadas e participações em bancas
  */
 public @Getter @Setter class CurriculoProfessor 
 {

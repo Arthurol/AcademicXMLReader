@@ -7,7 +7,7 @@ import lombok.Setter;
 
 /**
  *
- * FALTA COMENTAR
+ * Classe que representa uma Linha de Pesquisa, que contém um conjunto de professores
  */
 public @Getter @Setter class LinhaDePesquisa 
 {

@@ -1,9 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.unirio.pm.academicxmlreader.controller;
+
+import br.unirio.pm.academicxmlreader.model.Artigo;
+import br.unirio.pm.academicxmlreader.model.EntradaQualis;
+import br.unirio.pm.academicxmlreader.model.Tipo;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -11,5 +20,171 @@ package br.unirio.pm.academicxmlreader.controller;
  */
 public class LeitorClassificacaoQualis 
 {
+    private final static String URL_QUALIS = "https://s3.amazonaws.com/posgraduacao/qualis.xml";
+    private final static String ENTRADA = "entry";
+    private final static String REGEX = "regex";
+    private final static String CLASSE = "class";
+    private final static String TIPO = "type";
     
+    public List<EntradaQualis> buscaEntradasEvento() throws SAXException, IOException, ParserConfigurationException
+    {
+        ConversorXML conversor = new ConversorXML();
+        Document doc = conversor.xmlToDocument(URL_QUALIS);
+
+        List<EntradaQualis> listaQualis = new ArrayList<>();
+        
+        NodeList nosEntrada = doc.getElementsByTagName(ENTRADA);
+        
+        if (nosEntrada.getLength() == 0)
+            return null;
+        
+        //inicio da busca nas entradas do qualis.xml
+        for (int i = 0; i < nosEntrada.getLength(); i++)
+        {
+            EntradaQualis entradaQualis = new EntradaQualis();
+
+            // pega a entrada de index i da NodeList
+            NamedNodeMap entrada = nosEntrada.item(i).getAttributes();
+            
+            // transforma a string retirada da entrada do xml em uma expressão regular (ponto + asterisco nos seus inicio e fim),
+            // e com esta preenche o atributo regex da EntradaQualis
+            if (entrada.getNamedItem(REGEX).getNodeValue() == null || entrada.getNamedItem(REGEX).getNodeValue().isEmpty())
+                continue;
+            else
+            {
+                String regex = entrada.getNamedItem(REGEX).getNodeValue();
+                entradaQualis.setRegex(".*" + regex + ".*"); 
+            }
+            
+            // 
+            if (entrada.getNamedItem(TIPO).getNodeValue() == null || entrada.getNamedItem(TIPO).getNodeValue().isEmpty())
+                continue;
+            else
+            {
+                String tipo = entrada.getNamedItem(TIPO).getNodeValue();
+                if (tipo.equalsIgnoreCase("conferência") || tipo.equalsIgnoreCase("conferencia"))
+                    entradaQualis.setTipoEntrada(Tipo.Evento);
+                else
+                    continue;
+            }
+            
+            if (entrada.getNamedItem(CLASSE).getNodeValue() == null || entrada.getNamedItem(CLASSE).getNodeValue().isEmpty())
+                entradaQualis.setClassificacao("NC");
+            else
+            {
+                entradaQualis.setClassificacao(entrada.getNamedItem(CLASSE).getNodeValue());
+            }
+            
+            listaQualis.add(entradaQualis);
+        }
+        return listaQualis;
+    }
+    
+    public List<EntradaQualis> buscaEntradasRevista() throws SAXException, IOException, ParserConfigurationException
+    {
+        ConversorXML conversor = new ConversorXML();
+        Document doc = conversor.xmlToDocument(URL_QUALIS);
+
+        List<EntradaQualis> listaQualis = new ArrayList<>();
+        
+        NodeList nosEntrada = doc.getElementsByTagName(ENTRADA);
+        
+        if (nosEntrada.getLength() == 0)
+            return null;
+        
+        //inicio da busca nas entradas do qualis.xml
+        for (int i = 0; i < nosEntrada.getLength(); i++)
+        {
+            EntradaQualis entradaQualis = new EntradaQualis();
+
+            // pega a entrada de index i da NodeList
+            NamedNodeMap entrada = nosEntrada.item(i).getAttributes();
+            
+            // transforma a string retirada da entrada do xml em uma expressão regular (ponto + asterisco nos seus inicio e fim),
+            // e com esta preenche o atributo regex da EntradaQualis
+            if (entrada.getNamedItem(REGEX).getNodeValue() == null || entrada.getNamedItem(REGEX).getNodeValue().isEmpty())
+                continue;
+            else
+            {
+                String regex = entrada.getNamedItem(REGEX).getNodeValue();
+                entradaQualis.setRegex(".*" + regex + ".*"); 
+            }
+            
+            if (entrada.getNamedItem(TIPO).getNodeValue() == null || entrada.getNamedItem(TIPO).getNodeValue().isEmpty())
+                continue;
+            else
+            {
+                String tipo = entrada.getNamedItem(TIPO).getNodeValue();
+                if (tipo.equalsIgnoreCase("periódico") || tipo.equalsIgnoreCase("periodico"))
+                    entradaQualis.setTipoEntrada(Tipo.Revista);
+                else
+                    continue;
+            }
+            
+            if (entrada.getNamedItem(CLASSE).getNodeValue() == null || entrada.getNamedItem(CLASSE).getNodeValue().isEmpty())
+                entradaQualis.setClassificacao("NC");
+            else
+            {
+                entradaQualis.setClassificacao(entrada.getNamedItem(CLASSE).getNodeValue());
+            }
+            
+            listaQualis.add(entradaQualis);
+        }
+        return listaQualis;
+        
+    }
+    int k = 0;
+    public List<Artigo> classificadorEventos(List<Artigo> artigosEntrada) throws SAXException, IOException, ParserConfigurationException
+    {
+        List<Artigo> artigos = artigosEntrada;
+        List<EntradaQualis> listaQualis = buscaEntradasEvento();
+        
+        for (int i = 0; i < artigos.size(); i++)
+        {
+            String eventoArtigo = artigos.get(i).getTituloLocalPublicacao().toLowerCase();
+            
+            for(int j = 0; j < listaQualis.size(); j++)
+            {
+                EntradaQualis entradaQualis = listaQualis.get(j);
+                Pattern pattern = Pattern.compile(entradaQualis.getRegex().toLowerCase());
+                Matcher matcher = pattern.matcher(eventoArtigo);
+                
+                if (matcher.find())
+                { k++;
+                    artigos.get(i).setClassificacao(entradaQualis.getClassificacao());
+                    
+                    //if(k<20){    System.out.println("Versão do curriculo: " + artigos.get(i).getTituloLocalPublicacao());
+                      //  System.out.println("Versão do qualis: " + entradaQualis.getRegex());}
+                    break;
+                }
+            }
+        }
+        return artigos;
+    }
+    
+    public List<Artigo> classificadorRevistas(List<Artigo> artigosEntrada) throws SAXException, IOException, ParserConfigurationException
+    {
+        List<Artigo> artigos = artigosEntrada;
+        List<EntradaQualis> listaQualis = buscaEntradasRevista();
+        
+        for (int i = 0; i < artigos.size(); i++)
+        {
+            String eventoArtigo = artigos.get(i).getTituloLocalPublicacao().toLowerCase();
+            
+            for(int j = 0; j < listaQualis.size(); j++)
+            {
+                EntradaQualis entradaQualis = listaQualis.get(j);
+                Pattern pattern = Pattern.compile(entradaQualis.getRegex().toLowerCase());
+                Matcher matcher = pattern.matcher(eventoArtigo);
+                
+                if (matcher.find())
+                {
+                    artigos.get(i).setClassificacao(entradaQualis.getClassificacao());
+                    break;
+                }
+            }
+        }
+        return artigos;
+    }
+
 }
