@@ -4,6 +4,7 @@ import br.unirio.pm.academicxmlreader.model.Artigo;
 import br.unirio.pm.academicxmlreader.model.EntradaQualis;
 import br.unirio.pm.academicxmlreader.model.Tipo;
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -62,7 +63,7 @@ public class LeitorClassificacaoQualis
             else
             {
                 String tipo = entrada.getNamedItem(TIPO).getNodeValue();
-                if (tipo.equalsIgnoreCase("conferência") || tipo.equalsIgnoreCase("conferencia"))
+                if (tipo.equalsIgnoreCase("Conferência") || tipo.equalsIgnoreCase("Conferencia"))
                     entradaQualis.setTipoEntrada(Tipo.Evento);
                 else
                     continue;
@@ -133,29 +134,38 @@ public class LeitorClassificacaoQualis
         return listaQualis;
         
     }
-    int k = 0;
+
     public List<Artigo> classificadorEventos(List<Artigo> artigosEntrada) throws SAXException, IOException, ParserConfigurationException
     {
         List<Artigo> artigos = artigosEntrada;
         List<EntradaQualis> listaQualis = buscaEntradasEvento();
+        Pattern limpezaString = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+");
         
         for (int i = 0; i < artigos.size(); i++)
         {
             String eventoArtigo = artigos.get(i).getTituloLocalPublicacao().toLowerCase();
+            eventoArtigo = Normalizer.normalize(eventoArtigo, Normalizer.Form.NFD); 
+            eventoArtigo = limpezaString.matcher(eventoArtigo).replaceAll("");
             
+            int bestMatch = 0;
             for(int j = 0; j < listaQualis.size(); j++)
             {
                 EntradaQualis entradaQualis = listaQualis.get(j);
-                Pattern pattern = Pattern.compile(entradaQualis.getRegex().toLowerCase());
+                
+                String regexQualis = entradaQualis.getRegex().toUpperCase();
+                regexQualis = Normalizer.normalize(regexQualis, Normalizer.Form.NFD); 
+                regexQualis = limpezaString.matcher(regexQualis).replaceAll("");
+                
+                Pattern pattern = Pattern.compile(regexQualis);
                 Matcher matcher = pattern.matcher(eventoArtigo);
                 
                 if (matcher.find())
-                { k++;
+                {                
+                    if (regexQualis.length() > bestMatch)
+                    {
+                    bestMatch = regexQualis.length();
                     artigos.get(i).setClassificacao(entradaQualis.getClassificacao());
-                    
-                    //if(k<20){    System.out.println("Versão do curriculo: " + artigos.get(i).getTituloLocalPublicacao());
-                      //  System.out.println("Versão do qualis: " + entradaQualis.getRegex());}
-                    break;
+                    }
                 }
             }
         }
@@ -166,21 +176,33 @@ public class LeitorClassificacaoQualis
     {
         List<Artigo> artigos = artigosEntrada;
         List<EntradaQualis> listaQualis = buscaEntradasRevista();
+        Pattern limpezaString = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+");
         
         for (int i = 0; i < artigos.size(); i++)
         {
-            String eventoArtigo = artigos.get(i).getTituloLocalPublicacao().toLowerCase();
+            String eventoArtigo = artigos.get(i).getTituloLocalPublicacao().toUpperCase();
+            eventoArtigo = Normalizer.normalize(eventoArtigo, Normalizer.Form.NFD); 
+            eventoArtigo = limpezaString.matcher(eventoArtigo).replaceAll("");
             
+            int bestMatch = 0;
             for(int j = 0; j < listaQualis.size(); j++)
             {
                 EntradaQualis entradaQualis = listaQualis.get(j);
-                Pattern pattern = Pattern.compile(entradaQualis.getRegex().toLowerCase());
+                
+                String regexQualis = entradaQualis.getRegex().toUpperCase();
+                regexQualis = Normalizer.normalize(regexQualis, Normalizer.Form.NFD); 
+                regexQualis = limpezaString.matcher(regexQualis).replaceAll("");
+                
+                Pattern pattern = Pattern.compile(regexQualis);
                 Matcher matcher = pattern.matcher(eventoArtigo);
                 
                 if (matcher.find())
                 {
+                    if (regexQualis.length() > bestMatch)
+                    {
+                    bestMatch = regexQualis.length();
                     artigos.get(i).setClassificacao(entradaQualis.getClassificacao());
-                    break;
+                    }
                 }
             }
         }

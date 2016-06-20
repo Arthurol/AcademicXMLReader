@@ -9,14 +9,21 @@ import lombok.Setter;
  */
 public @Getter @Setter class Orientacao 
 {
-    private String ano;
+    private int ano;
     private String nomeOrientado;
     private String tituloProjeto;
     
     public Orientacao()
     {
-        ano = "";
+        ano = -1;
         nomeOrientado = "";
         tituloProjeto = "";
+    }
+    
+    public void print()
+    {
+        System.out.println("Nome do orientado/orientando: " + nomeOrientado);
+        System.out.println("Titulo do projeto: " + tituloProjeto);
+        System.out.println("Ano da Orientação: " + ano);
     }
 }

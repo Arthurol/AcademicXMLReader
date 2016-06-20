@@ -9,15 +9,22 @@ import lombok.Setter;
  */
 public @Getter @Setter class ParticipacaoBanca 
 {
-    private String ano;
+    private int ano;
     private String tituloTrabalho;
     private String nomeCandidato;
     
     public ParticipacaoBanca()
     {
-        ano = "";
+        ano = -1;
         tituloTrabalho = "";
         nomeCandidato = "";
+    }
+    
+    public void print()
+    {
+        System.out.println("Ano do candidato: " + nomeCandidato);
+        System.out.println("Titulo do trabalho apresentado: " + tituloTrabalho);
+        System.out.println("Ano de Publicação: " + ano);
     }
 }
 

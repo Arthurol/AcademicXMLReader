@@ -10,7 +10,7 @@ import lombok.Setter;
 public @Getter @Setter class Artigo 
 {
     private String titulo;
-    private String anoPublicacao;
+    private int anoPublicacao;
     private String tituloLocalPublicacao; // Titulo da revista ou evento onde o artigo foi publicado
     private String codigoLocalPublicacao;
     private String classificacao; // Classificação do evento ou revista onde o artigo foi publicado
@@ -18,7 +18,7 @@ public @Getter @Setter class Artigo
     public Artigo()
     {
         titulo = "";
-        anoPublicacao = "";
+        anoPublicacao = -1;
         tituloLocalPublicacao = "";
         codigoLocalPublicacao = "";
         classificacao = "NC";

@@ -20,7 +20,6 @@ import org.xml.sax.SAXException;
  *
  * Classe responsavel pela transformacao de um InputStream(obtida da conexao com a url) em Document
  */
-//DESCRICAO SUJEITA A MUDANCA CASO ESSA CLASSE VA ABRIR O ARQUIVO ZIP (Curriculo dos profs)
 public class ConversorXML 
 {       
     /**
@@ -54,7 +53,6 @@ public class ConversorXML
     /**
     * Do acesso à url, é obtida uma InputStream, que é convertida para Document e retornada.
     */
-    //DUVIDA: Porque ele te pede para criar uma SAXException?
     public Document xmlToDocument(String urlXml) throws SAXException, IOException, ParserConfigurationException 
     {
         InputStream stream = acessarUrl(urlXml);
