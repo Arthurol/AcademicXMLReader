@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: br.unirio.pm.academicxmlreader.controller.LeitorProgramaPosGraduacaoTest
+Test set: LeitoresTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.353 sec
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.015 sec

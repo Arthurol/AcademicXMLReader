@@ -1,0 +1,16 @@
+br\unirio\pm\academicxmlreader\controller\CentralDeProcessamento.class
+br\unirio\pm\academicxmlreader\controller\LeitorProgramaPosGraduacao.class
+br\unirio\pm\academicxmlreader\controller\EscritorDados.class
+br\unirio\pm\academicxmlreader\model\Orientacao.class
+br\unirio\pm\academicxmlreader\controller\LeitorCurriculoProfessor.class
+br\unirio\pm\academicxmlreader\model\CurriculoProfessor.class
+br\unirio\pm\academicxmlreader\model\Professor.class
+br\unirio\pm\academicxmlreader\model\ParticipacaoBanca.class
+br\unirio\pm\academicxmlreader\model\Artigo.class
+br\unirio\pm\academicxmlreader\controller\LeitorProfessoresPrograma.class
+br\unirio\pm\academicxmlreader\model\Tipo.class
+Main.class
+br\unirio\pm\academicxmlreader\controller\ConversorXML.class
+br\unirio\pm\academicxmlreader\model\EntradaQualis.class
+br\unirio\pm\academicxmlreader\model\LinhaDePesquisa.class
+br\unirio\pm\academicxmlreader\controller\LeitorClassificacaoQualis.class
