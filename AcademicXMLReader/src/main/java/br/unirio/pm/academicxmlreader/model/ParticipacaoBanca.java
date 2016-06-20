@@ -20,6 +20,9 @@ public @Getter @Setter class ParticipacaoBanca
         nomeCandidato = "";
     }
     
+    /**
+    * Imprime os dados das participações em banca pelo Professor
+    */
     public void print()
     {
         System.out.println("Ano do candidato: " + nomeCandidato);

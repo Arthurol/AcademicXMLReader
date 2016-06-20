@@ -16,8 +16,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- *
- * @author Arthur
+ * Classe responsável pela verificação das entradas no arquivo xml qualis 
  */
 public class LeitorClassificacaoQualis 
 {
@@ -27,6 +26,10 @@ public class LeitorClassificacaoQualis
     private final static String CLASSE = "class";
     private final static String TIPO = "type";
     
+    
+    /**
+     * Método que usa expressão regular para buscar entradas de Eventos no arquivo xml qualis
+     */
     public List<EntradaQualis> buscaEntradasEvento() throws SAXException, IOException, ParserConfigurationException
     {
         ConversorXML conversor = new ConversorXML();
@@ -81,6 +84,9 @@ public class LeitorClassificacaoQualis
         return listaQualis;
     }
     
+     /**
+     * Método que usa expressão regular para buscar entradas de Revistas no arquivo xml qualis
+     */
     public List<EntradaQualis> buscaEntradasRevista() throws SAXException, IOException, ParserConfigurationException
     {
         ConversorXML conversor = new ConversorXML();
@@ -135,6 +141,9 @@ public class LeitorClassificacaoQualis
         
     }
 
+     /**
+     * 
+     */
     public List<Artigo> classificadorEventos(List<Artigo> artigosEntrada) throws SAXException, IOException, ParserConfigurationException
     {
         List<Artigo> artigos = artigosEntrada;
@@ -172,6 +181,9 @@ public class LeitorClassificacaoQualis
         return artigos;
     }
     
+    /**
+     * 
+     */
     public List<Artigo> classificadorRevistas(List<Artigo> artigosEntrada) throws SAXException, IOException, ParserConfigurationException
     {
         List<Artigo> artigos = artigosEntrada;

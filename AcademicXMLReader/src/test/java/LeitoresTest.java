@@ -7,7 +7,7 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * Testes das classes de leitura de xml;
+ * Testes das classes de leitura de xml
  */
 public class LeitoresTest {
     
@@ -32,7 +32,6 @@ public class LeitoresTest {
     @Test
     public void testLeituraQualis() throws IOException, SAXException, ParserConfigurationException 
     {
-        
         LeitorProgramaPosGraduacao leitor = new LeitorProgramaPosGraduacao();
         
         assertTrue(leitor.procuraProgramaPosGraduacao("PPGI-UNIRIO"));

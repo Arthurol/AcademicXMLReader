@@ -18,7 +18,9 @@ import org.xml.sax.SAXException;
  */
 public class CentralDeProcessamento {
     
-    
+    /**
+     * Método que retorna as Linhas de Pesquisa com seus professores e Artigos de Revista e Evento
+     */
     public List<LinhaDePesquisa> preenchimentoLinhas(String nomeProgramaPosGraduacao) throws IOException, SAXException, ParserConfigurationException
     {
         LeitorProfessoresPrograma leitorProfessores = new LeitorProfessoresPrograma();
@@ -46,6 +48,10 @@ public class CentralDeProcessamento {
         }
         return listaLinhas;
     }
+    
+    /**
+     * Método que seleciona Artigos, participações em Bancas e Orientações dentro do intervalo requerido
+     */
     
     public List<LinhaDePesquisa> filtraCurriculosPorIntervalo(String nomeProgramaPosGraduacao, int anoInicial, int anoFinal) throws IOException, SAXException, ParserConfigurationException
     {
@@ -97,6 +103,11 @@ public class CentralDeProcessamento {
         return listaLinhas;
     }
     
+    
+    /**
+     * Método seleciona Artigos dentro do intervalo requerido e retorna uma lista com os Artigos
+     */
+    
     public List<Artigo> filtraArtigos(List<Artigo> listaArtigos, int anoInicial, int anoFinal)
     {
         List<Artigo> listaFiltrada = new ArrayList<>();
@@ -112,6 +123,11 @@ public class CentralDeProcessamento {
         }
         return listaFiltrada;
     }
+    
+    
+    /**
+     * Método seleciona Orientações dentro do intervalo requerido e retorna uma lista com as Orientações
+     */
     
     public List<Orientacao> filtraOrientacoes(List<Orientacao> listaOrientacoes, int anoInicial, int anoFinal)
     {
@@ -129,6 +145,11 @@ public class CentralDeProcessamento {
         return listaFiltrada;
     }
     
+    
+    /**
+     * Método seleciona participações em Bancas dentro do intervalo requerido e retorna uma lista com as participações em Bancas
+     */
+    
     public List<ParticipacaoBanca> filtraBancas(List<ParticipacaoBanca> listaParticipacaoBanca, int anoInicial, int anoFinal)
     {
         List<ParticipacaoBanca> listaFiltrada = new ArrayList<>();
@@ -145,4 +166,3 @@ public class CentralDeProcessamento {
        return listaFiltrada;
     }
 }
-

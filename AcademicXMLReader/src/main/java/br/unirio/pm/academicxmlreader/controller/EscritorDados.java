@@ -37,6 +37,9 @@ public class EscritorDados {
     private static final String LEGENDA_TXT = "Nome do Professor\t\t\t\t\t" + "RevA1\tRevA2\tRevB1\tRevB2\tRevB3\tRevB4\tRevC\tRevN/C\t" + "EveA1\tEveA2\tEveB1\tEveB2\tEveB3\tEveB4\tEveC\tEveN/C\t" 
                                                 + "bancasD\tbancasM\tbancasG\t" + "OriCoD\tOriCoM\tOriCoG\tOriAnD\tOriAnM\tOriAnG";
     
+    /**
+     * Método que cria um arquivo .txt e imprime o nome de cada coluna
+     */
     public void preencheArquivoTxt(String nomeProgramaPosGraduacao, int anoInicial, int anoFinal) throws IOException, SAXException, ParserConfigurationException
     {
         File file = new File("Relatório " + nomeProgramaPosGraduacao + ".txt");
@@ -57,6 +60,9 @@ public class EscritorDados {
 
     }
     
+    /**
+     * Método que escreve no .txt todos os dados referentes as Linhas de Pesquisa e Professores, inclusive seu somatório
+     */
     public void escreveLinhasPesquisa(BufferedWriter buffer, String nomeProgramaPosGraduacao, int anoInicial, int anoFinal) throws IOException, SAXException, ParserConfigurationException
     {
         CentralDeProcessamento central = new CentralDeProcessamento();
@@ -152,7 +158,7 @@ public class EscritorDados {
     
     /**
     *
-    * Concatena diversas variáveis em uma só String, separadas pelo caracter <\t>
+    * Concatena as variáveis que guardam os dados de cada Professor em uma só String, separadas pelo caracter <\t>
     */
     private String getStringSeparadaTab(String nomeProf, int revA1, int revA2, int revB1, int revB2, int revB3, int revB4, int revC, int revNC, int eveA1, 
                                             int eveA2, int eveB1, int eveB2, int eveB3, int eveB4, int eveC, int eveNC, int bancasDout, int bancasMest, int bancasGrad, 
