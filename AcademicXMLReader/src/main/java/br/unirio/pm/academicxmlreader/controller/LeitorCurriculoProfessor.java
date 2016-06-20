@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -57,7 +58,7 @@ public class LeitorCurriculoProfessor
     private static final String DETALHAMENTO_ORIENTACAO_GRADUACAO_ANDAMENTO = "DETALHAMENTO-DA-ORIENTACAO-EM-ANDAMENTO-DE-GRADUACAO";
     
     private static final String TCC_CONCLUIDO = "TRABALHO_DE_CONCLUSAO_DE_CURSO_GRADUACAO";
-    private static final String TCC_ANDAMENTO = "TRABALHO DE CONCLUSAO DE CURSO GRADUACAO";
+    private static final String TCC_ANDAMENTO = "Trabalho de conclusão de curso de graduação";
     
     //--> Orientações Mestrado
     private static final String ORIENTACAO_MESTRADO_CONCLUIDA = "ORIENTACOES-CONCLUIDAS-PARA-MESTRADO";
@@ -123,7 +124,6 @@ public class LeitorCurriculoProfessor
                     // recupera o titulo e o ano de publicação do artigo
                     artigo.setTitulo(buscador.getAttributes().getNamedItem(TITULO_ARTIGO).getNodeValue());
                     artigo.setAnoPublicacao(Integer.parseInt(buscador.getAttributes().getNamedItem(ANO_ARTIGO).getNodeValue()));
-                    continue;
                 }
 
                 if (buscador.getNodeName().equals(DADOS_DETALHADOS_ARTIGO_REVISTA))
@@ -158,8 +158,8 @@ public class LeitorCurriculoProfessor
 
             // pega o artigo de index i da NodeList
             NodeList nodeArtigo = nodeListArtigos.item(i).getChildNodes();
-
-            for (int j = 0; j < nodeArtigo.getLength(); j++)
+            
+           for (int j = 0; j < nodeArtigo.getLength(); j++)
             {
                 // nó utilizado para percorrer os nós filhos do artigo atual e neles buscar dados
                 Node buscador = nodeArtigo.item(j);
@@ -169,7 +169,6 @@ public class LeitorCurriculoProfessor
                     // recupera o titulo e o ano de publicação do artigo
                     artigo.setTitulo(buscador.getAttributes().getNamedItem(TITULO_TRABALHO).getNodeValue());
                     artigo.setAnoPublicacao(Integer.parseInt(buscador.getAttributes().getNamedItem(ANO_TRABALHO).getNodeValue()));
-                    continue;
                 }
 
                 if (buscador.getNodeName().equals(DADOS_DETALHADOS_ARTIGO_EVENTO))
@@ -217,7 +216,6 @@ public class LeitorCurriculoProfessor
                         // recupera o ano da orientação e o título do projeto
                         orientacao.setAno(Integer.parseInt(buscador.getAttributes().getNamedItem(ANO).getNodeValue()));
                         orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
-                        continue;
                     }
                     else
                         orientacao = null;
@@ -264,11 +262,10 @@ public class LeitorCurriculoProfessor
                 if (buscador.getNodeName().equals(DADOS_BASICOS_ORIENTACAO_GRADUACAO_ANDAMENTO))
                 { 
                     if (buscador.getAttributes().getNamedItem(NATUREZA).getNodeValue().equalsIgnoreCase(TCC_ANDAMENTO))
-                    {       
+                    { 
                         // recupera o ano da orientação e o título do projeto
                         orientacao.setAno(Integer.parseInt(buscador.getAttributes().getNamedItem(ANO).getNodeValue()));
                         orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO_TRABALHO).getNodeValue());
-                        continue;
                     }
                 }
 
@@ -312,7 +309,6 @@ public class LeitorCurriculoProfessor
                     // recupera o ano da orientação e o título do projeto
                     orientacao.setAno(Integer.parseInt(buscador.getAttributes().getNamedItem(ANO).getNodeValue()));
                     orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
-                    continue;  
                 }
 
                 if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_MESTRADO_CONCLUIDA))
@@ -354,7 +350,6 @@ public class LeitorCurriculoProfessor
                     // recupera o ano da orientação e o título do projeto
                     orientacao.setAno(Integer.parseInt(buscador.getAttributes().getNamedItem(ANO).getNodeValue()));
                     orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO_TRABALHO).getNodeValue());
-                    continue;  
                 }
 
                 if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_MESTRADO_ANDAMENTO))
@@ -396,7 +391,6 @@ public class LeitorCurriculoProfessor
                     // recupera o ano da orientação e o título do projeto
                     orientacao.setAno(Integer.parseInt(buscador.getAttributes().getNamedItem(ANO).getNodeValue()));
                     orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
-                    continue;  
                 }
 
                 if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_DOUTORADO_CONCLUIDA))
@@ -438,7 +432,6 @@ public class LeitorCurriculoProfessor
                     // recupera o ano da orientação e o título do projeto
                     orientacao.setAno(Integer.parseInt(buscador.getAttributes().getNamedItem(ANO).getNodeValue()));
                     orientacao.setTituloProjeto(buscador.getAttributes().getNamedItem(TITULO_TRABALHO).getNodeValue());
-                    continue;  
                 }
 
                 if (buscador.getNodeName().equals(DETALHAMENTO_ORIENTACAO_DOUTORADO_ANDAMENTO))
@@ -480,7 +473,6 @@ public class LeitorCurriculoProfessor
                     // recupera o ano da banca e o título do trabalho
                     banca.setAno(Integer.parseInt(buscador.getAttributes().getNamedItem(ANO).getNodeValue()));
                     banca.setTituloTrabalho(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
-                    continue;  
                 }
 
                 if (buscador.getNodeName().equals(DETALHAMENTO_BANCA_GRADUACAO))
@@ -521,8 +513,7 @@ public class LeitorCurriculoProfessor
                 {                          
                     // recupera o ano da banca e o título do trabalho
                     banca.setAno(Integer.parseInt(buscador.getAttributes().getNamedItem(ANO).getNodeValue()));
-                    banca.setTituloTrabalho(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
-                    continue;  
+                    banca.setTituloTrabalho(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());  
                 }
 
                 if (buscador.getNodeName().equals(DETALHAMENTO_BANCA_MESTRADO))
@@ -564,7 +555,6 @@ public class LeitorCurriculoProfessor
                     // recupera o ano da banca e o título do trabalho
                     banca.setAno(Integer.parseInt(buscador.getAttributes().getNamedItem(ANO).getNodeValue()));
                     banca.setTituloTrabalho(buscador.getAttributes().getNamedItem(TITULO).getNodeValue());
-                    continue;  
                 }
 
                 if (buscador.getNodeName().equals(DETALHAMENTO_BANCA_DOUTORADO))

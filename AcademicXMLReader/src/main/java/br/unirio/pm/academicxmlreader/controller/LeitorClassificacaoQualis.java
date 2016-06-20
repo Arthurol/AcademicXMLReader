@@ -16,7 +16,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Classe responsável pela verificação das entradas no arquivo xml qualis 
+ *
+ * @author Arthur
  */
 public class LeitorClassificacaoQualis 
 {
@@ -27,9 +28,6 @@ public class LeitorClassificacaoQualis
     private final static String TIPO = "type";
     
     
-    /**
-     * Método que usa expressão regular para buscar entradas de Eventos no arquivo xml qualis
-     */
     public List<EntradaQualis> buscaEntradasEvento() throws SAXException, IOException, ParserConfigurationException
     {
         ConversorXML conversor = new ConversorXML();
@@ -56,7 +54,7 @@ public class LeitorClassificacaoQualis
                 continue;
             else
             {
-                String regex = entrada.getNamedItem(REGEX).getNodeValue();
+                String regex = entrada.getNamedItem(REGEX).getNodeValue(); 
                 entradaQualis.setRegex(".*" + regex + ".*"); 
             }
             
@@ -66,7 +64,7 @@ public class LeitorClassificacaoQualis
             else
             {
                 String tipo = entrada.getNamedItem(TIPO).getNodeValue();
-                if (tipo.equalsIgnoreCase("Conferência") || tipo.equalsIgnoreCase("Conferencia"))
+                if (tipo.equalsIgnoreCase("conferência") || tipo.equalsIgnoreCase("conferencia"))
                     entradaQualis.setTipoEntrada(Tipo.Evento);
                 else
                     continue;
@@ -84,9 +82,6 @@ public class LeitorClassificacaoQualis
         return listaQualis;
     }
     
-     /**
-     * Método que usa expressão regular para buscar entradas de Revistas no arquivo xml qualis
-     */
     public List<EntradaQualis> buscaEntradasRevista() throws SAXException, IOException, ParserConfigurationException
     {
         ConversorXML conversor = new ConversorXML();
@@ -140,19 +135,21 @@ public class LeitorClassificacaoQualis
         return listaQualis;
         
     }
-
-     /**
-     * 
-     */
+    
+    /**
+    *
+    * Verifica se os artigos publicados em eventos contém o padrão criado a partir das regex de tipo Conferência do arquivo qualis.xml
+    */
     public List<Artigo> classificadorEventos(List<Artigo> artigosEntrada) throws SAXException, IOException, ParserConfigurationException
     {
         List<Artigo> artigos = artigosEntrada;
         List<EntradaQualis> listaQualis = buscaEntradasEvento();
-        Pattern limpezaString = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+");
+        Pattern limpezaString = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+"); //Pattern que será usado junto com a classe Normalizer,
+                                                                                                        // com a finalidade de eliminar certos caracteres como acentos ou cedilha.
         
         for (int i = 0; i < artigos.size(); i++)
         {
-            String eventoArtigo = artigos.get(i).getTituloLocalPublicacao().toLowerCase();
+            String eventoArtigo = artigos.get(i).getTituloLocalPublicacao().toUpperCase();
             eventoArtigo = Normalizer.normalize(eventoArtigo, Normalizer.Form.NFD); 
             eventoArtigo = limpezaString.matcher(eventoArtigo).replaceAll("");
             
@@ -182,8 +179,9 @@ public class LeitorClassificacaoQualis
     }
     
     /**
-     * 
-     */
+    *
+    * Verifica se os artigos publicados em revista contém o padrão criado a partir das regex de tipo Periódico do arquivo qualis.xml
+    */
     public List<Artigo> classificadorRevistas(List<Artigo> artigosEntrada) throws SAXException, IOException, ParserConfigurationException
     {
         List<Artigo> artigos = artigosEntrada;

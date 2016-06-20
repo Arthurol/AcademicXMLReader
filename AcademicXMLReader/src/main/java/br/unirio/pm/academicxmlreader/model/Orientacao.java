@@ -20,9 +20,6 @@ public @Getter @Setter class Orientacao
         tituloProjeto = "";
     }
     
-    /**
-    * Imprime os dados das orientações realizadas pelo Professor
-    */
     public void print()
     {
         System.out.println("Nome do orientado/orientando: " + nomeOrientado);

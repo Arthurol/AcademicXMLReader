@@ -14,7 +14,7 @@ public class Main {
     { 
         
         EscritorDados escritor = new EscritorDados();
-        escritor.preencheArquivoTxt("PPGI-UNIRIO", 2013, 2015);
+        escritor.preencheArquivoTxt("PPGI-UNIRIO", 2010, 2016);
                 
      }   
 }

@@ -13,7 +13,7 @@ public @Getter @Setter class  Professor
     private String nome;
     private CurriculoProfessor curriculo;
 
-    Professor(String nome, String codigoCurriculo, String linhaDePesquisa)
+    Professor(String nome, String codigoCurriculo)
     {
         this.nome = nome;
         this.codigoCurriculo = codigoCurriculo;
