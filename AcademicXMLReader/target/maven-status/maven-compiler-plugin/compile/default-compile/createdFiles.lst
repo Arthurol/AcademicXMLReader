@@ -9,8 +9,8 @@ br\unirio\pm\academicxmlreader\model\ParticipacaoBanca.class
 br\unirio\pm\academicxmlreader\model\Artigo.class
 br\unirio\pm\academicxmlreader\controller\LeitorProfessoresPrograma.class
 br\unirio\pm\academicxmlreader\model\Tipo.class
-Main.class
 br\unirio\pm\academicxmlreader\controller\ConversorXML.class
+br\unirio\pm\academicxmlreader\controller\Main.class
 br\unirio\pm\academicxmlreader\model\EntradaQualis.class
 br\unirio\pm\academicxmlreader\model\LinhaDePesquisa.class
 br\unirio\pm\academicxmlreader\controller\LeitorClassificacaoQualis.class

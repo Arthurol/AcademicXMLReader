@@ -80,36 +80,36 @@ public class EscritorDados {
                 Professor professor = professores.get(j);
                 CurriculoProfessor curriculo = professor.getCurriculo();
                 
-                revistasA1 = getArtigosA1(curriculo, 0); contagens.add(revistasA1);
-                revistasA2 = getArtigosA2(curriculo, 0); contagens.add(revistasA2);
-                revistasB1 = getArtigosB1(curriculo, 0); contagens.add(revistasB1);
-                revistasB2 = getArtigosB2(curriculo, 0); contagens.add(revistasB2);
-                revistasB3 = getArtigosB3(curriculo, 0); contagens.add(revistasB3);
-                revistasB4 = getArtigosB4(curriculo, 0); contagens.add(revistasB4);
-                revistasB5 = getArtigosB5(curriculo, 0); contagens.add(revistasB5);
-                revistasC = getArtigosC(curriculo, 0);   contagens.add(revistasC);
-                revistasNC = getArtigosNC(curriculo, 0); contagens.add(revistasNC);
-                eventosA1 = getArtigosA1(curriculo, 1); contagens.add(eventosA1);
-                eventosA2 = getArtigosA2(curriculo, 1); contagens.add(eventosA2);
-                eventosB1 = getArtigosB1(curriculo, 1); contagens.add(eventosB1);
-                eventosB2 = getArtigosB2(curriculo, 1); contagens.add(eventosB2);
-                eventosB3 = getArtigosB3(curriculo, 1); contagens.add(eventosB3);
-                eventosB4 = getArtigosB4(curriculo, 1); contagens.add(eventosB4);
-                eventosB5 = getArtigosB5(curriculo, 1); contagens.add(eventosB5);
-                eventosC = getArtigosC(curriculo, 1);   contagens.add(eventosC);
-                eventosNC = getArtigosNC(curriculo, 1); contagens.add(eventosNC);
+                revistasA1 = getArtigosA1(curriculo, 0); contagens.add(0, revistasA1);
+                revistasA2 = getArtigosA2(curriculo, 0); contagens.add(1, revistasA2);
+                revistasB1 = getArtigosB1(curriculo, 0); contagens.add(2, revistasB1);
+                revistasB2 = getArtigosB2(curriculo, 0); contagens.add(3, revistasB2);
+                revistasB3 = getArtigosB3(curriculo, 0); contagens.add(4, revistasB3);
+                revistasB4 = getArtigosB4(curriculo, 0); contagens.add(5, revistasB4);
+                revistasB5 = getArtigosB5(curriculo, 0); contagens.add(6, revistasB5);
+                revistasC = getArtigosC(curriculo, 0);   contagens.add(7, revistasC);
+                revistasNC = getArtigosNC(curriculo, 0); contagens.add(8, revistasNC);
+                eventosA1 = getArtigosA1(curriculo, 1); contagens.add(9, eventosA1);
+                eventosA2 = getArtigosA2(curriculo, 1); contagens.add(10, eventosA2);
+                eventosB1 = getArtigosB1(curriculo, 1); contagens.add(11, eventosB1);
+                eventosB2 = getArtigosB2(curriculo, 1); contagens.add(12, eventosB2);
+                eventosB3 = getArtigosB3(curriculo, 1); contagens.add(13, eventosB3);
+                eventosB4 = getArtigosB4(curriculo, 1); contagens.add(14, eventosB4);
+                eventosB5 = getArtigosB5(curriculo, 1); contagens.add(15, eventosB5);
+                eventosC = getArtigosC(curriculo, 1);   contagens.add(16, eventosC);
+                eventosNC = getArtigosNC(curriculo, 1); contagens.add(17, eventosNC);
                 
-                bancasDout = curriculo.getBancasDoutorado().size(); contagens.add(bancasDout);
-                bancasMest = curriculo.getBancasMestrado().size();  contagens.add(bancasMest);
-                bancasGrad = curriculo.getBancasGraduacao().size(); contagens.add(bancasGrad);
+                bancasDout = curriculo.getBancasDoutorado().size(); contagens.add(18, bancasDout);
+                bancasMest = curriculo.getBancasMestrado().size();  contagens.add(19, bancasMest);
+                bancasGrad = curriculo.getBancasGraduacao().size(); contagens.add(20, bancasGrad);
 
-                orientConcDout = curriculo.getOrientacoesDoutoradoConcluidas().size(); contagens.add(orientConcDout);
-                orientConcMest = curriculo.getOrientacoesMestradoConcluidas().size();  contagens.add(orientConcMest);
-                orientConcGrad = curriculo.getOrientacoesGraduacaoConcluidas().size(); contagens.add(orientConcGrad);
+                orientConcDout = curriculo.getOrientacoesDoutoradoConcluidas().size(); contagens.add(21, orientConcDout);
+                orientConcMest = curriculo.getOrientacoesMestradoConcluidas().size();  contagens.add(22, orientConcMest);
+                orientConcGrad = curriculo.getOrientacoesGraduacaoConcluidas().size(); contagens.add(23, orientConcGrad);
 
-                orientAndamDout = curriculo.getOrientacoesDoutoradoAndamento().size(); contagens.add(orientAndamDout);
-                orientAndamMest = curriculo.getOrientacoesMestradoAndamento().size();  contagens.add(orientAndamMest);
-                orientAndamGrad = curriculo.getOrientacoesGraduacaoAndamento().size(); contagens.add(orientAndamGrad);
+                orientAndamDout = curriculo.getOrientacoesDoutoradoAndamento().size(); contagens.add(24, orientAndamDout);
+                orientAndamMest = curriculo.getOrientacoesMestradoAndamento().size();  contagens.add(25, orientAndamMest);
+                orientAndamGrad = curriculo.getOrientacoesGraduacaoAndamento().size(); contagens.add(26, orientAndamGrad);
 
                 String concat = getStringSeparadaTab (professor.getNome(), contagens);
                 buffer.write(concat);
@@ -119,7 +119,7 @@ public class EscritorDados {
                 {
                     for (int k = 0; k < contagens.size(); k++)
                     {
-                        somaContagens.add(contagens.get(k));
+                        somaContagens.add(k, contagens.get(k));
                     }
                 }
                 else
@@ -139,8 +139,8 @@ public class EscritorDados {
             for (int l = 0; l < somaContagens.size(); l++)
             {
                 int numProfsLinha = linhasPesquisa.get(i).getProfessores().size();
-                float divisao = somaContagens.get(l).floatValue() / (float) numProfsLinha;
-                dividePorProfs.add(divisao);
+                float divisao = somaContagens.get(l) / (float) numProfsLinha;
+                dividePorProfs.add(l, divisao);
 
             }
             String concatSoma = getStringSeparadaTabFloat(("Total Linha " + linhasPesquisa.get(i).getNome()), dividePorProfs );
