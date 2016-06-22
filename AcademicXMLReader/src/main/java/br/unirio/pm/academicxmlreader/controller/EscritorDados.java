@@ -40,7 +40,7 @@ public class EscritorDados {
     */
     public void preencheArquivoTxt(String nomeProgramaPosGraduacao, int anoInicial, int anoFinal) throws IOException, SAXException, ParserConfigurationException
     {
-        File file = new File("Relatório " + nomeProgramaPosGraduacao + ".txt");
+        File file = new File(nomeProgramaPosGraduacao + ".txt");
 
         if (!file.exists())
             file.createNewFile();

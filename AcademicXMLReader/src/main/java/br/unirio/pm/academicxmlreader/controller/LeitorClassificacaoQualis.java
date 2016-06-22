@@ -71,7 +71,7 @@ public class LeitorClassificacaoQualis
             }
             
             if (entrada.getNamedItem(CLASSE).getNodeValue() == null || entrada.getNamedItem(CLASSE).getNodeValue().isEmpty())
-                entradaQualis.setClassificacao("NC");
+                entradaQualis.setClassificacao("");
             else
             {
                 entradaQualis.setClassificacao(entrada.getNamedItem(CLASSE).getNodeValue());
@@ -124,7 +124,7 @@ public class LeitorClassificacaoQualis
             }
             
             if (entrada.getNamedItem(CLASSE).getNodeValue() == null || entrada.getNamedItem(CLASSE).getNodeValue().isEmpty())
-                entradaQualis.setClassificacao("NC");
+                entradaQualis.setClassificacao("");
             else
             {
                 entradaQualis.setClassificacao(entrada.getNamedItem(CLASSE).getNodeValue());
@@ -169,11 +169,13 @@ public class LeitorClassificacaoQualis
                 {                
                     if (regexQualis.length() > bestMatch)
                     {
-                    bestMatch = regexQualis.length();
-                    artigos.get(i).setClassificacao(entradaQualis.getClassificacao());
+                        bestMatch = regexQualis.length();
+                        artigos.get(i).setClassificacao(entradaQualis.getClassificacao());
                     }
                 }
             }
+            if(artigos.get(i).getClassificacao()=="")
+                System.out.println(artigos.get(i).getTituloLocalPublicacao());
         }
         return artigos;
     }

@@ -21,7 +21,7 @@ public @Getter @Setter class Artigo
         anoPublicacao = -1;
         tituloLocalPublicacao = "";
         codigoLocalPublicacao = "";
-        classificacao = "NC";
+        classificacao = "";
     }
     
     /**
